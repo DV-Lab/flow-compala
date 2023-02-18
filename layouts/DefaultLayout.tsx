@@ -1,14 +1,10 @@
-import { useRouter } from "next/router";
-
-import { TransitionLayout } from "./TransitionLayout";
+import DarkModeButton from "@components/DarkModeButton";
 
 export const DefaultLayout: IComponent = ({ children }) => {
-  const router = useRouter();
   return (
-    <div className="w-full h-full overflow-x-hidden">
-      <TransitionLayout location={router.pathname}>
-        <>{children}</>
-      </TransitionLayout>
+    <div className="relative">
+      <DarkModeButton />
+      <>{children}</>
     </div>
   );
 };

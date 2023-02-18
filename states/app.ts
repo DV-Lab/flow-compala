@@ -6,7 +6,7 @@ interface IAppState {
 }
 
 const useAppStore = create<IAppState>((set) => ({
-  darkMode: "auto",
+  darkMode: "dark",
   setDarkMode: (mode) => {
     set({ darkMode: mode });
   },
