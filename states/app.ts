@@ -12,4 +12,26 @@ const useAppStore = create<IAppState>((set) => ({
   },
 }));
 
-export { useAppStore };
+interface ICompareListState {
+  players: IPlayerInfo[];
+  count: number;
+  setPlayers: (players: IPlayerInfo[]) => void;
+  setIncreaseCount: () => void;
+  setDecreaseCount: () => void;
+}
+
+const useCompareListStore = create<ICompareListState>((set, get) => ({
+  players: [],
+  count: 0,
+  setPlayers: (players: IPlayerInfo[]) => {
+    set({ players });
+  },
+  setIncreaseCount: () => {
+    set({ count: get().count + 1 });
+  },
+  setDecreaseCount: () => {
+    set({ count: get().count - 1 });
+  },
+}));
+
+export { useAppStore, useCompareListStore };

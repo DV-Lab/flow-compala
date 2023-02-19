@@ -1,5 +1,14 @@
+import { ComponentLoading } from "@components/ComponentLoading";
 import { ScreenLayout } from "@layouts/ScreenLayout";
-import { AppScreen } from "@screens/app";
+import dynamic from "next/dynamic";
+
+const AppScreen = dynamic(
+  () => import("@screens/app").then((data) => data.AppScreen),
+  {
+    ssr: false,
+    loading: () => <ComponentLoading />,
+  }
+);
 
 const Home: IPageComponent = () => {
   return <AppScreen />;

@@ -1,14 +1,46 @@
 [
   {
-    "name": "Cristiano Ronaldo",
+    "name": "A",
     "avatar": "/cr7.png"
   },
   {
-    "name": "Ronaldo",
+    "name": "B",
     "avatar": "/cr7.png"
   },
   {
-    "name": "Messi",
+    "name": "C",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "D",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "E",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "F",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "G",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "H",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "J",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "K",
+    "avatar": "/cr7.png"
+  },
+  {
+    "name": "L",
     "avatar": "/cr7.png"
   }
 ]
