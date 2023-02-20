@@ -1,14 +1,13 @@
+import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
-
-import { GOLAZOS_ADDRESS } from "../constant";
 import {
   getDetailsImageUrl,
   getFrontImageUrl,
   getHeroImageUrl,
-  getIdleVideoeUrl,
+  getIdleVideoUrl,
   getLegalImageUrl,
   getPopupVideoUrl,
-} from "../utils";
+} from "@utils/app";
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -40,7 +39,7 @@ async function getPlayAndEditionByPlayId(playId) {
       detailsImageUrl: getDetailsImageUrl(playDataId),
       legalImageUrl: getLegalImageUrl(playDataId),
       popupVideoUrl: getPopupVideoUrl(playDataId),
-      idleVideoUrl: getIdleVideoeUrl(playDataId),
+      idleVideoUrl: getIdleVideoUrl(playDataId),
     },
     edition: {
       tier: edition.tier,

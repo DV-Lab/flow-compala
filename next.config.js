@@ -9,6 +9,7 @@ const nextConfig = nextTranslate({
   publicRuntimeConfig: {
     TEAM_NAME: process.env.TEAM_NAME || "UNKNOWN",
     IS_DEV: process.env.NODE_ENV !== "production",
+    GOLAZOS_ADDRESS: process.env.GOLAZOS_ADDRESS,
   },
 });
 
