@@ -9,6 +9,10 @@ import {
   getPopupVideoUrl,
 } from "@utils/app";
 
+fcl.config({
+  "accessNode.api": "https://rest-mainnet.onflow.org",
+});
+
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
