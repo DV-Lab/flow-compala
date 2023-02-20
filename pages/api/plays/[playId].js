@@ -29,7 +29,6 @@ async function getPlayAndEditionByPlayId(playId) {
   const play = await getPlayById(playId);
   const playDataId = play.metadata.PlayDataID;
 
-  console.log(2);
   const editions = await getAllEditions();
   const edition = editions.find((edition) => edition.id == playId);
 

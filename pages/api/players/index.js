@@ -2,6 +2,10 @@ import * as fcl from "@onflow/fcl";
 
 import { GOLAZOS_ADDRESS } from "../constant";
 
+fcl.config({
+  "accessNode.api": "https://rest-mainnet.onflow.org",
+});
+
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
