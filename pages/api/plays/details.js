@@ -18,11 +18,14 @@ export default async function handler(req, res) {
     try {
       const { playIds } = req.body;
 
-      const response = [];
+      const editions = await getAllEditions();
+
+      const multiCalls = [];
       for (let i = 0; i < playIds.length; i++) {
-        const playInfo = await getPlayAndEditionByPlayId(playIds[i]);
-        playInfo && response.push(playInfo);
+        multiCalls.push(getPlayAndEditionByPlayId(playIds[i], editions));
       }
+
+      const response = await Promise.all(multiCalls);
 
       res.status(200).json(response);
     } catch (e) {
@@ -34,12 +37,11 @@ export default async function handler(req, res) {
   }
 }
 
-async function getPlayAndEditionByPlayId(playId) {
+async function getPlayAndEditionByPlayId(playId, editions) {
   try {
     const play = await getPlayById(playId);
     const playDataId = play.metadata.PlayDataID;
 
-    const editions = await getAllEditions();
     const edition = editions.find((edition) => edition.id == playId);
 
     const playAndEdition = {
