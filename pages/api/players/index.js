@@ -1,5 +1,6 @@
 import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
+import { getFrontImageUrl } from "@utils/app";
 
 fcl.config({
   "accessNode.api": "https://rest-mainnet.onflow.org",
@@ -38,13 +39,18 @@ async function getAllNames() {
   });
 
   let groupNamePlayers = [
-    { playIds: [sortedNamePlayers[0].playId], name: sortedNamePlayers[0].name },
+    {
+      playIds: [sortedNamePlayers[0].playId],
+      avatar: getFrontImageUrl(sortedNamePlayers[0].playId),
+      name: sortedNamePlayers[0].name,
+    },
   ];
 
   for (let i = 1; i < sortedNamePlayers.length; i++) {
     if (sortedNamePlayers[i - 1].name != sortedNamePlayers[i].name) {
       groupNamePlayers.push({
         playIds: [sortedNamePlayers[i].playId],
+        avatar: getFrontImageUrl(sortedNamePlayers[i].playId),
         name: sortedNamePlayers[i].name,
       });
     } else {
