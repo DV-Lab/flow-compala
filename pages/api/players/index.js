@@ -52,8 +52,12 @@ async function getAllNames() {
 
   let groupNamePlayers = [
     {
-      playIds: [sortedNamePlayers[0].playId],
-      avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
+      plays: [
+        {
+          playId: sortedNamePlayers[0].playId,
+          avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
+        },
+      ],
       name: sortedNamePlayers[0].name,
     },
   ];
@@ -61,22 +65,29 @@ async function getAllNames() {
   for (let i = 1; i < sortedNamePlayers.length; i++) {
     if (sortedNamePlayers[i - 1].name != sortedNamePlayers[i].name) {
       groupNamePlayers.push({
-        playIds: [sortedNamePlayers[i].playId],
-        avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
+        plays: [
+          {
+            playId: sortedNamePlayers[i].playId,
+            avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
+          },
+        ],
         name: sortedNamePlayers[i].name,
       });
     } else {
       let lastIndexNamePlayers = groupNamePlayers.length - 1;
+
       if (
         sortedNamePlayers[i].playId >= 300 &&
         sortedNamePlayers[i].playId < 377 &&
-        groupNamePlayers[lastIndexNamePlayers].playIds.length >= 1
+        groupNamePlayers[lastIndexNamePlayers].plays.length > 0
       ) {
-        groupNamePlayers[lastIndexNamePlayers].playIds.pop();
+        groupNamePlayers[lastIndexNamePlayers].plays.pop();
       }
-      groupNamePlayers[lastIndexNamePlayers].playIds.push(
-        sortedNamePlayers[i].playId
-      );
+
+      groupNamePlayers[lastIndexNamePlayers].plays.push({
+        playId: sortedNamePlayers[i].playId,
+        avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
+      });
     }
   }
 
@@ -86,18 +97,18 @@ async function getAllNames() {
 async function getAllPlays() {
   return await fcl.query({
     cadence: `
-          import Golazos from ${GOLAZOS_ADDRESS}
-  
-          pub fun main(): [Golazos.PlayData] {
-              let plays: [Golazos.PlayData] = []
-              var id: UInt64 = 1
-              // Note < , as nextPlayID has not yet been used
-              while id < Golazos.nextPlayID {
-                  plays.append(Golazos.getPlayData(id: id)!)
-                  id = id + 1
-              }
-              return plays
-          }
-      `,
+      import Golazos from ${GOLAZOS_ADDRESS}
+
+      pub fun main(): [Golazos.PlayData] {
+        let plays: [Golazos.PlayData] = []
+        var id: UInt64 = 1
+        // Note < , as nextPlayID has not yet been used
+        while id < Golazos.nextPlayID {
+            plays.append(Golazos.getPlayData(id: id)!)
+            id = id + 1
+        }
+        return plays
+      }
+    `,
   });
 }
