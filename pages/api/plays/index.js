@@ -16,13 +16,19 @@ fcl.config({
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const { playId } = req.query;
-      const response = await getPlayAndEditionByPlayId(playId);
+      const { playId: playIds } = req.query;
+
+      const response = [];
+      for (let i = 0; i < playIds.length; i++) {
+        const playInfo = await getPlayAndEditionByPlayId(playIds[i]);
+        response.push(playInfo);
+      }
+
       res.status(200).json(response);
     } catch (e) {
       console.log(e);
       return res.status(500).json({
-        error: e.toString(),
+        error: e.message,
       });
     }
   }
