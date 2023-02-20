@@ -21,7 +21,7 @@ export default async function handler(req, res) {
       const response = [];
       for (let i = 0; i < playIds.length; i++) {
         const playInfo = await getPlayAndEditionByPlayId(playIds[i]);
-        response.push(playInfo);
+        playInfo && response.push(playInfo);
       }
 
       res.status(200).json(response);
@@ -35,30 +35,34 @@ export default async function handler(req, res) {
 }
 
 async function getPlayAndEditionByPlayId(playId) {
-  const play = await getPlayById(playId);
-  const playDataId = play.metadata.PlayDataID;
+  try {
+    const play = await getPlayById(playId);
+    const playDataId = play.metadata.PlayDataID;
 
-  const editions = await getAllEditions();
-  const edition = editions.find((edition) => edition.id == playId);
+    const editions = await getAllEditions();
+    const edition = editions.find((edition) => edition.id == playId);
 
-  const playAndEdition = {
-    ...play,
-    media: {
-      frontImageUrl: getFrontImageUrl(playDataId),
-      heroImageUrl: getHeroImageUrl(playDataId),
-      detailsImageUrl: getDetailsImageUrl(playDataId),
-      legalImageUrl: getLegalImageUrl(playDataId),
-      popupVideoUrl: getPopupVideoUrl(playDataId),
-      idleVideoUrl: getIdleVideoUrl(playDataId),
-    },
-    edition: {
-      tier: edition.tier,
-      maxMintSize: edition.maxMintSize,
-      numMinted: edition.numMinted,
-    },
-  };
+    const playAndEdition = {
+      ...play,
+      media: {
+        frontImageUrl: getFrontImageUrl(playDataId),
+        heroImageUrl: getHeroImageUrl(playDataId),
+        detailsImageUrl: getDetailsImageUrl(playDataId),
+        legalImageUrl: getLegalImageUrl(playDataId),
+        popupVideoUrl: getPopupVideoUrl(playDataId),
+        idleVideoUrl: getIdleVideoUrl(playDataId),
+      },
+      edition: {
+        tier: edition.tier,
+        maxMintSize: edition.maxMintSize,
+        numMinted: edition.numMinted,
+      },
+    };
 
-  return playAndEdition;
+    return playAndEdition;
+  } catch (e) {
+    return null;
+  }
 }
 
 async function getAllEditions() {
