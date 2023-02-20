@@ -9,8 +9,9 @@ fcl.config({
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      const allPlayNames = await getAllNames();
+      let allPlayNames = await getAllNames();
       const { search } = req.query;
+
       if (search) {
         const filteredNames = allPlayNames.filter((playName) =>
           playName.name.toLowerCase().includes(search.trim().toLowerCase())
@@ -33,7 +34,11 @@ async function getAllNames() {
   let namePlayers = plays.map((play) => {
     let firstName = play.metadata.PlayerFirstName;
     let lastName = play.metadata.PlayerLastName;
-    return { playId: play.id, name: `${firstName} ${lastName}` };
+    return {
+      playId: play.id,
+      name: `${firstName} ${lastName}`,
+      playDataID: play.metadata.PlayDataID,
+    };
   });
 
   let sortedNamePlayers = namePlayers.sort(function (playA, playB) {
@@ -48,7 +53,7 @@ async function getAllNames() {
   let groupNamePlayers = [
     {
       playIds: [sortedNamePlayers[0].playId],
-      avatar: getFrontImageUrl(sortedNamePlayers[0].playId),
+      avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
       name: sortedNamePlayers[0].name,
     },
   ];
@@ -57,11 +62,19 @@ async function getAllNames() {
     if (sortedNamePlayers[i - 1].name != sortedNamePlayers[i].name) {
       groupNamePlayers.push({
         playIds: [sortedNamePlayers[i].playId],
-        avatar: getFrontImageUrl(sortedNamePlayers[i].playId),
+        avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
         name: sortedNamePlayers[i].name,
       });
     } else {
-      groupNamePlayers[groupNamePlayers.length - 1].playIds.push(
+      let lastIndexNamePlayers = groupNamePlayers.length - 1;
+      if (
+        sortedNamePlayers[i].playId >= 300 &&
+        sortedNamePlayers[i].playId < 377 &&
+        groupNamePlayers[lastIndexNamePlayers].playIds.length >= 1
+      ) {
+        groupNamePlayers[lastIndexNamePlayers].playIds.pop();
+      }
+      groupNamePlayers[lastIndexNamePlayers].playIds.push(
         sortedNamePlayers[i].playId
       );
     }
