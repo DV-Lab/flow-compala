@@ -1,3 +1,4 @@
+import { TIER_TYPES } from "@configs/app";
 import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
 import { getFrontImageUrl } from "@utils/app";
@@ -22,6 +23,10 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
+  if (!TIER_TYPES.includes(tier.toUpperCase())) {
+    return [];
+  }
+
   let [editions, plays] = await Promise.all([getAllEditions(), getAllPlays()]);
 
   let playIdMappingTier = [];
