@@ -1,18 +1,17 @@
 import useDebounce from "@hooks/useDebounce";
 import { Typography } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CompareItem } from "./CompareItem";
 import { BoxSVG } from "./SVGIcons/BoxSVG";
 
 export const CompareTable: IComponent = () => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();
-  const debouncedQuery = useDebounce(comparedPlays, 100);
-  const [data, setData] = useState<IPlayMetadata[]>();
+  const debouncedQuery = useDebounce(comparedPlays, 1000);
+  const [data, setData] = useState<IPlayInfo[]>();
 
-  const fetchDetailsOfComparesPlays = useCallback(() => {
-    console.log({ debouncedQuery });
+  const fetchDetailsOfComparesPlays = () => {
     fetch("/api/plays/details", {
       method: "POST", // or 'PUT'
       headers: {
@@ -22,13 +21,12 @@ export const CompareTable: IComponent = () => {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log({ data });
         setData(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, []);
+  };
 
   useEffect(() => {
     if (debouncedQuery) {
@@ -38,19 +36,19 @@ export const CompareTable: IComponent = () => {
 
   const renderData = useMemo(
     () => (
-      <div className=" grid grid-cols-3 gap-4">
+      <div className=" grid grid-cols-4 gap-4">
         {data &&
           data
             .sort(
               (a, b) =>
-                -(a.metadata.PlayerFirstName < b.metadata.PlayerFirstName)
+                -(a.metadata.PlayerJerseyName < b.metadata.PlayerJerseyName)
             )
             .map((play, index) => (
               <CompareItem
                 key={index}
-                image={play.media.frontImageUrl}
-                name={play.metadata.PlayerJerseyName}
-                knownName={play.metadata.PlayerKnownName}
+                metadata={play.metadata}
+                media={play.media}
+                edition={play.edition}
               />
             ))}
       </div>
@@ -58,7 +56,7 @@ export const CompareTable: IComponent = () => {
     [data]
   );
   return (
-    <div className="text-white p-8 border mr-8 border-white rounded-lg h-[80vh]">
+    <div className="text-white p-2 h-[80vh]">
       {numOfComparedPlays > 0 ? (
         renderData
       ) : (

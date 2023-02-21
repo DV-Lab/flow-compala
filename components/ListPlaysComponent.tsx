@@ -56,8 +56,10 @@ export const ListPlaysComponent: IComponent<{
                 onResizeCapture={undefined}
                 onClick={() => handleCheck(playId)}
                 disabled={
-                  !(numOfComparedPlays === 0 || numOfComparedPlays < 3) &&
-                  !comparedPlays.includes(playId)
+                  !(
+                    numOfComparedPlays === 0 ||
+                    numOfComparedPlays < DEFAULT_NUMBER_OF_COMPARED_MOMENTS
+                  ) && !comparedPlays.includes(playId)
                 }
               />
             </div>
