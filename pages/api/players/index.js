@@ -1,3 +1,4 @@
+import { TierTypes } from "@configs/index";
 import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
 import { getFrontImageUrl } from "@utils/app";
@@ -5,8 +6,6 @@ import { getFrontImageUrl } from "@utils/app";
 fcl.config({
   "accessNode.api": "https://rest-mainnet.onflow.org",
 });
-
-const TIER_ENUM = ["LEGENDARY", "RARE", "UNCOMMON", "COMMON"];
 
 export default async function handler(req, res) {
   if (req.method === "GET") {
@@ -45,7 +44,7 @@ async function getAllNamesWithFilter(name, tier, team) {
   let playIdsWithTier;
   let validTier = false;
 
-  if (tier && TIER_ENUM.includes(tier.toUpperCase())) {
+  if (tier && TierTypes.includes(tier.toUpperCase())) {
     let tierFormat = tier.toLowerCase().trim();
     let editions = await getEditionsByTier(tierFormat);
 
@@ -130,7 +129,7 @@ async function getAllNamesWithFilter(name, tier, team) {
 async function getEditionsByTier(tier) {
   const tierUpper = tier.toUpperCase();
 
-  if (!TIER_ENUM.includes(tierUpper)) {
+  if (!TierTypes.includes(tierUpper)) {
     return [];
   }
   return await fcl.query({
