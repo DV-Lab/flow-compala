@@ -23,7 +23,7 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
-  if (!TIER_TYPES.includes(tier.toUpperCase())) {
+  if (tier && !TIER_TYPES.includes(tier.toUpperCase())) {
     return [];
   }
 
@@ -77,37 +77,14 @@ async function getAllNamesWithFilter(name, tier, team) {
     });
 
     // Group plays
-    let groupNamePlayers = [
-      {
-        plays: [
-          {
-            playId: sortedNamePlayers[0].playId,
-            avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
-            match: sortedNamePlayers[0].match,
-            playType: sortedNamePlayers[0].playType,
-            matchSeason: sortedNamePlayers[0].matchSeason,
-            tier: sortedNamePlayers[0].tier,
-          },
-        ],
-        name: sortedNamePlayers[0].name,
-      },
-    ];
+    let groupNamePlayers = [mapInvidualToGroupPlays(sortedNamePlayers[0])];
 
     for (let i = 1; i < sortedNamePlayers.length; i++) {
+      let mapToGroupPlays;
+
       if (sortedNamePlayers[i - 1].name != sortedNamePlayers[i].name) {
-        groupNamePlayers.push({
-          plays: [
-            {
-              playId: sortedNamePlayers[i].playId,
-              avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
-              match: sortedNamePlayers[i].match,
-              playType: sortedNamePlayers[i].playType,
-              matchSeason: sortedNamePlayers[i].matchSeason,
-              tier: sortedNamePlayers[i].tier,
-            },
-          ],
-          name: sortedNamePlayers[i].name,
-        });
+        mapToGroupPlays = mapInvidualToGroupPlays(sortedNamePlayers[i]);
+        groupNamePlayers.push(mapToGroupPlays);
       } else {
         let lastIndexNamePlayers = groupNamePlayers.length - 1;
 
@@ -118,15 +95,11 @@ async function getAllNamesWithFilter(name, tier, team) {
         ) {
           groupNamePlayers[lastIndexNamePlayers].plays.pop();
         }
+        mapToGroupPlays = mapInvidualToGroupPlays(sortedNamePlayers[i]);
 
-        groupNamePlayers[lastIndexNamePlayers].plays.push({
-          playId: sortedNamePlayers[i].playId,
-          avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
-          match: sortedNamePlayers[i].match,
-          playType: sortedNamePlayers[i].playType,
-          matchSeason: sortedNamePlayers[i].matchSeason,
-          tier: sortedNamePlayers[i].tier,
-        });
+        groupNamePlayers[lastIndexNamePlayers].plays.push(
+          mapToGroupPlays.plays[0]
+        );
       }
     }
 
@@ -136,7 +109,7 @@ async function getAllNamesWithFilter(name, tier, team) {
   return [];
 }
 
-export async function getAllEditions() {
+async function getAllEditions() {
   return await fcl.query({
     cadence: `
         import Golazos from ${GOLAZOS_ADDRESS}
@@ -173,4 +146,20 @@ async function getAllPlays() {
       }
     `,
   });
+}
+
+function mapInvidualToGroupPlays(play) {
+  return {
+    plays: [
+      {
+        playId: play.playId,
+        avatar: getFrontImageUrl(play.playDataID),
+        match: play.match,
+        playType: play.playType,
+        matchSeason: play.matchSeason,
+        tier: play.tier,
+      },
+    ],
+    name: play.name,
+  };
 }
