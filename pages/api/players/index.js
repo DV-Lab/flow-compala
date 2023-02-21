@@ -1,4 +1,3 @@
-import { TIER_TYPES } from "@configs/app";
 import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
 import { getFrontImageUrl } from "@utils/app";
@@ -23,9 +22,13 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
-  let plays = await getAllPlays();
+  let [editions, plays] = await Promise.all([getAllEditions(), getAllPlays()]);
 
-  // Mapping data
+  let playIdMappingTier = [];
+  editions.forEach(
+    (edition) => (playIdMappingTier[edition.playID] = edition.tier)
+  );
+
   let infoPlays = plays.map((play) => {
     let firstName = play.metadata.PlayerFirstName;
     let lastName = play.metadata.PlayerLastName;
@@ -36,32 +39,22 @@ async function getAllNamesWithFilter(name, tier, team) {
       playId: play.id,
       playDataID: play.metadata.PlayDataID,
       name: `${firstName} ${lastName}`,
-      team: `${matchHomeTeam} vs ${matchAwayTeam}`,
+      match: `${matchHomeTeam} vs ${matchAwayTeam}`,
+      playType: play.metadata.PlayType,
+      matchSeason: play.metadata.MatchSeason,
+      tier: playIdMappingTier[play.id],
     };
   });
-
-  // Filter tier of editions
-  let playIdsWithTier;
-  let validTier = false;
-
-  if (tier) {
-    let tierFormat = tier.toLowerCase().trim();
-    let editions = await getEditionsByTier(tierFormat);
-
-    playIdsWithTier = editions.map((edition) => edition.playID);
-
-    validTier = true;
-  }
 
   // Filter plays
   let filteredPlays = infoPlays.filter((play) => {
     if (name && !play.name.toLowerCase().includes(name.toLowerCase())) {
       return false;
     }
-    if (team && !play.team.toLowerCase().includes(team.toLowerCase())) {
+    if (team && !play.match.toLowerCase().includes(team.toLowerCase())) {
       return false;
     }
-    if (validTier && !playIdsWithTier.includes(play.playId)) {
+    if (tier && !play.tier.includes(tier.toUpperCase())) {
       return false;
     }
     return true;
@@ -85,6 +78,10 @@ async function getAllNamesWithFilter(name, tier, team) {
           {
             playId: sortedNamePlayers[0].playId,
             avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
+            match: sortedNamePlayers[0].match,
+            playType: sortedNamePlayers[0].playType,
+            matchSeason: sortedNamePlayers[0].matchSeason,
+            tier: sortedNamePlayers[0].tier,
           },
         ],
         name: sortedNamePlayers[0].name,
@@ -98,6 +95,10 @@ async function getAllNamesWithFilter(name, tier, team) {
             {
               playId: sortedNamePlayers[i].playId,
               avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
+              match: sortedNamePlayers[i].match,
+              playType: sortedNamePlayers[i].playType,
+              matchSeason: sortedNamePlayers[i].matchSeason,
+              tier: sortedNamePlayers[i].tier,
             },
           ],
           name: sortedNamePlayers[i].name,
@@ -116,6 +117,10 @@ async function getAllNamesWithFilter(name, tier, team) {
         groupNamePlayers[lastIndexNamePlayers].plays.push({
           playId: sortedNamePlayers[i].playId,
           avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
+          match: sortedNamePlayers[i].match,
+          playType: sortedNamePlayers[i].playType,
+          matchSeason: sortedNamePlayers[i].matchSeason,
+          tier: sortedNamePlayers[i].tier,
         });
       }
     }
@@ -126,33 +131,23 @@ async function getAllNamesWithFilter(name, tier, team) {
   return [];
 }
 
-async function getEditionsByTier(tier) {
-  const tierUpper = tier.toUpperCase();
-
-  if (!TIER_TYPES.includes(tierUpper)) {
-    return [];
-  }
+export async function getAllEditions() {
   return await fcl.query({
     cadence: `
-      import Golazos from ${GOLAZOS_ADDRESS}
+        import Golazos from ${GOLAZOS_ADDRESS}
 
-      pub fun main(tier: String): [Golazos.EditionData] {
-        let editions: [Golazos.EditionData] = []
-        var id: UInt64 = 1
-    
-        // Note < , as nextEditionID has not yet been used
-        while id < Golazos.nextEditionID {
-            let edition = Golazos.getEditionData(id: id)!
-            log(edition)
-            if edition.tier == tier {
-                editions.append(edition)
+        pub fun main(): [Golazos.EditionData] {
+            let editions: [Golazos.EditionData] = []
+            var id: UInt64 = 1
+
+            // Note < , as nextEditionID has not yet been used
+            while id < Golazos.nextEditionID {
+                editions.append(Golazos.getEditionData(id: id)!)
+                id = id + 1
             }
-            id = id + 1
+            return editions
         }
-        return editions
-      }
     `,
-    args: (arg, t) => [arg(tierUpper, t.String)],
   });
 }
 
