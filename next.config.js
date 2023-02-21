@@ -6,6 +6,9 @@ const nextConfig = nextTranslate({
   reactStrictMode: true,
   swcMinify: true,
   output: "standalone",
+  images: {
+    domains: ["assets.laligagolazos.com"],
+  },
   publicRuntimeConfig: {
     TEAM_NAME: process.env.TEAM_NAME || "UNKNOWN",
     IS_DEV: process.env.NODE_ENV !== "production",

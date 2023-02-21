@@ -14,20 +14,22 @@ fcl.config({
 });
 
 export default async function handler(req, res) {
-  if (req.method === "GET") {
+  if (req.method === "POST") {
     try {
-      const { playIds } = req.body;
+      if (req && req.body) {
+        const { playIds } = req.body;
 
-      const editions = await getAllEditions();
+        const editions = await getAllEditions();
 
-      const multiCalls = [];
-      for (let i = 0; i < playIds.length; i++) {
-        multiCalls.push(getPlayAndEditionByPlayId(playIds[i], editions));
+        const multiCalls = [];
+        for (let i = 0; i < playIds.length; i++) {
+          multiCalls.push(getPlayAndEditionByPlayId(playIds[i], editions));
+        }
+
+        const response = await Promise.all(multiCalls);
+
+        res.status(200).json(response);
       }
-
-      const response = await Promise.all(multiCalls);
-
-      res.status(200).json(response);
     } catch (e) {
       console.log(e);
       return res.status(500).json({

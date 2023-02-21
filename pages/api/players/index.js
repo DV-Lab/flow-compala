@@ -9,16 +9,18 @@ fcl.config({
 export default async function handler(req, res) {
   if (req.method === "GET") {
     try {
-      let allPlayNames = await getAllNames();
-      const { search } = req.query;
+      if (req && req.query) {
+        let allPlayNames = await getAllNames();
+        const { search } = req.query;
 
-      if (search) {
-        const filteredNames = allPlayNames.filter((playName) =>
-          playName.name.toLowerCase().includes(search.trim().toLowerCase())
-        );
-        return res.status(200).json(filteredNames);
+        if (search) {
+          const filteredNames = allPlayNames.filter((playName) =>
+            playName.name.toLowerCase().includes(search.trim().toLowerCase())
+          );
+          return res.status(200).json(filteredNames);
+        }
+        return res.status(200).json(allPlayNames);
       }
-      return res.status(200).json(allPlayNames);
     } catch (e) {
       console.log(e);
       return res.status(500).json({

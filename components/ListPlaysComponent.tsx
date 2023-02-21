@@ -1,78 +1,64 @@
-import { Checkbox, Typography } from "@material-tailwind/react";
+import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
+import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { ComponentLoading } from "./ComponentLoading";
 import { LoadingSVG } from "./SVGIcons/LoadingSVG";
 
 export const ListPlaysComponent: IComponent<{
-  playsList: string[];
+  playsList: IPlay[];
 }> = ({ playsList }) => {
-  const { playIds, count, setPlayIds, setIncreaseCount, setDecreaseCount } =
-    useCompareListStore();
-  const [listPlays, setListPlays] = useState<IPlays[]>([]);
-  const fetchAllPlaysById = useCallback((id: string) => {
-    fetch(`/api/plays?playId=${id}`)
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then((data) => setListPlays((prev) => [...prev, data]));
-  }, []);
+  const {
+    comparedPlays,
+    numOfComparedPlays,
+    setComparedPlays,
+    setDecreaseNumOfComparedPlays,
+    setIncreaseNumOfComparedPlays,
+  } = useCompareListStore();
+
   const handleCheck = (id: string) => {
     if (playsList) {
-      if (playIds.includes(id)) {
-        const newPlayIds = playIds.filter((play) => play !== id);
-        setPlayIds(newPlayIds);
-        setDecreaseCount();
+      if (comparedPlays.includes(id)) {
+        const newPlayIds = comparedPlays.filter((play) => play !== id);
+        setComparedPlays(newPlayIds);
+        setDecreaseNumOfComparedPlays();
         return;
       }
-      //   if (count < 3) {
-      //     const clickedPlays = data.find(
-      //       (item: IPlayerInfo) => item.name === name
-      //     );
-      //     if (clickedPlayer) {
-      //       const newPlayers = [...players, { ...clickedPlayer }];
-      //       setPlayers(newPlayers);
-      //       setIncreaseCount();
-      //     }
-      //     return;
-      //   }
+      if (numOfComparedPlays < DEFAULT_NUMBER_OF_COMPARED_MOMENTS) {
+        const newPlayers = [...comparedPlays, id];
+        setComparedPlays(newPlayers);
+        setIncreaseNumOfComparedPlays();
+      }
+      return;
     }
   };
 
-  useEffect(() => {
-    playsList?.forEach((id) => fetchAllPlaysById(id));
-  }, []);
   return (
     <div>
-      {listPlays.length > 0 ? (
+      {playsList.length > 0 ? (
         <div>
-          {listPlays.map((play, index) => (
-            <div key={index}>
-              <div>
-                <Image
-                  src="/cr7.png"
-                  alt={play.metadata.PlayDataID}
-                  width={40}
-                  height={40}
-                  className="rounded-full"
-                />
+          {playsList.map(({ playId, avatar }, index) => (
+            <div key={index} className="flex items-center">
+              <div className="grow">
+                <div className="wrapper w-[180px] h-[180px]">
+                  <Image
+                    src={avatar}
+                    alt={playId}
+                    width="100%"
+                    height="100%"
+                    layout="responsive"
+                  />
+                </div>
               </div>
-              <Typography className="grow" variant="h6">
-                {play.metadata.PlayerJerseyName}
-              </Typography>
               <Checkbox
                 nonce={undefined}
                 onResize={undefined}
                 onResizeCapture={undefined}
-                onClick={() => handleCheck(play.id)}
-                // disabled={
-                //   !(count === 0 || count < 3) &&
-                //   !clickedPlayerList.includes(player.name)
-                // }
+                onClick={() => handleCheck(playId)}
+                disabled={
+                  !(numOfComparedPlays === 0 || numOfComparedPlays < 3) &&
+                  !comparedPlays.includes(playId)
+                }
               />
             </div>
           ))}

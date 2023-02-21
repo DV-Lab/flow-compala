@@ -1,11 +1,16 @@
 type TDarkModeStatus = "dark" | "light" | "auto";
 
-interface IPlayerInfo {
-  name: string;
-  playIds: string[];
+interface IPlay {
+  playId: string;
+  avatar: string;
 }
 
-interface IPlays {
+interface IPlayerInfo {
+  name: string;
+  plays: IPlay[];
+}
+
+interface IPlayMetadata {
   id: string;
   classification: string;
   metadata: {

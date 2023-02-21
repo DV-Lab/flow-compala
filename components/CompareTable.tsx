@@ -1,27 +1,65 @@
+import useDebounce from "@hooks/useDebounce";
 import { Typography } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { CompareItem } from "./CompareItem";
 import { BoxSVG } from "./SVGIcons/BoxSVG";
 
 export const CompareTable: IComponent = () => {
-  const { playIds, count } = useCompareListStore();
+  const { comparedPlays, numOfComparedPlays } = useCompareListStore();
+  const debouncedQuery = useDebounce(comparedPlays, 100);
+  const [data, setData] = useState<IPlayMetadata[]>();
+
+  const fetchDetailsOfComparesPlays = useCallback(() => {
+    console.log({ debouncedQuery });
+    fetch("/api/plays/details", {
+      method: "POST", // or 'PUT'
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ playIds: debouncedQuery }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log({ data });
+        setData(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (debouncedQuery) {
+      fetchDetailsOfComparesPlays();
+    }
+  }, [debouncedQuery]);
+
   const renderData = useMemo(
     () => (
       <div className=" grid grid-cols-3 gap-4">
-        {playIds
-          .sort((a, b) => -(a < b))
-          .map((play, index) => (
-            <CompareItem key={index} image={play} name={play} />
-          ))}
+        {data &&
+          data
+            .sort(
+              (a, b) =>
+                -(a.metadata.PlayerFirstName < b.metadata.PlayerFirstName)
+            )
+            .map((play, index) => (
+              <CompareItem
+                key={index}
+                image={play.media.frontImageUrl}
+                name={play.metadata.PlayerJerseyName}
+                knownName={play.metadata.PlayerKnownName}
+              />
+            ))}
       </div>
     ),
-    [playIds]
+    [data]
   );
   return (
     <div className="text-white p-8 border mr-8 border-white rounded-lg h-[80vh]">
-      {count > 0 ? (
+      {numOfComparedPlays > 0 ? (
         renderData
       ) : (
         <div className="h-full text-white flex items-center justify-center gap-8">

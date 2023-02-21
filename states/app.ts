@@ -13,24 +13,24 @@ const useAppStore = create<IAppState>((set) => ({
 }));
 
 interface ICompareListState {
-  playIds: string[];
-  count: number;
-  setPlayIds: (players: string[]) => void;
-  setIncreaseCount: () => void;
-  setDecreaseCount: () => void;
+  comparedPlays: string[];
+  numOfComparedPlays: number;
+  setComparedPlays: (playIds: string[]) => void;
+  setIncreaseNumOfComparedPlays: () => void;
+  setDecreaseNumOfComparedPlays: () => void;
 }
 
 const useCompareListStore = create<ICompareListState>((set, get) => ({
-  playIds: [],
-  count: 0,
-  setPlayIds: (playIds: string[]) => {
-    set({ playIds });
+  comparedPlays: [],
+  numOfComparedPlays: 0,
+  setComparedPlays: (playIds: string[]) => {
+    set({ comparedPlays: playIds });
   },
-  setIncreaseCount: () => {
-    set({ count: get().count + 1 });
+  setIncreaseNumOfComparedPlays: () => {
+    set({ numOfComparedPlays: get().numOfComparedPlays + 1 });
   },
-  setDecreaseCount: () => {
-    set({ count: get().count - 1 });
+  setDecreaseNumOfComparedPlays: () => {
+    set({ numOfComparedPlays: get().numOfComparedPlays - 1 });
   },
 }));
 

@@ -15,7 +15,7 @@ export const MainLayout: IComponent = ({ children }) => {
         {
           dark: darkMode === "dark",
         },
-        "w-full h-full"
+        "w-full min-h-screen h-full font-serif"
       )}
     >
       <div className="dark:text-white w-full h-full bg-white dark:bg-default transition-all flex flex-col">
