@@ -1,6 +1,6 @@
 import useDebounce from "@hooks/useDebounce";
 import { TransitionLayout } from "@layouts/TransitionLayout";
-import { Input, Typography } from "@material-tailwind/react";
+import { Input } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 
@@ -28,7 +28,7 @@ export const ListPlayerComponent: IComponent = () => {
       });
   }, []);
 
-  const searchPlayers = useCallback(() => {
+  const searchPlayers = () => {
     fetch(`/api/players?search=${debouncedSearch}`)
       .then((res) => {
         if (res.status === 200) {
@@ -38,7 +38,7 @@ export const ListPlayerComponent: IComponent = () => {
       .then((data) => {
         setData(data);
       });
-  }, []);
+  };
 
   useEffect(() => {
     fetchPlayers();
@@ -53,7 +53,6 @@ export const ListPlayerComponent: IComponent = () => {
   const handleChange = (event: any) => {
     setQuery(event.target.value);
   };
-  console.log({ data });
   return (
     <div className="p-1 flex flex-col gap-8 overflow-y-scroll">
       <div className="search-component flex gap-2">
