@@ -23,9 +23,17 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
-  let plays = await getAllPlays();
+  if (tier && !TIER_TYPES.includes(tier.toUpperCase())) {
+    return [];
+  }
 
-  // Mapping data
+  let [editions, plays] = await Promise.all([getAllEditions(), getAllPlays()]);
+
+  let playIdMappingTier = [];
+  editions.forEach(
+    (edition) => (playIdMappingTier[edition.playID] = edition.tier)
+  );
+
   let infoPlays = plays.map((play) => {
     let firstName = play.metadata.PlayerFirstName;
     let lastName = play.metadata.PlayerLastName;
@@ -36,32 +44,22 @@ async function getAllNamesWithFilter(name, tier, team) {
       playId: play.id,
       playDataID: play.metadata.PlayDataID,
       name: `${firstName} ${lastName}`,
-      team: `${matchHomeTeam} vs ${matchAwayTeam}`,
+      match: `${matchHomeTeam} vs ${matchAwayTeam}`,
+      playType: play.metadata.PlayType,
+      matchSeason: play.metadata.MatchSeason,
+      tier: playIdMappingTier[play.id],
     };
   });
-
-  // Filter tier of editions
-  let playIdsWithTier;
-  let validTier = false;
-
-  if (tier) {
-    let tierFormat = tier.toLowerCase().trim();
-    let editions = await getEditionsByTier(tierFormat);
-
-    playIdsWithTier = editions.map((edition) => edition.playID);
-
-    validTier = true;
-  }
 
   // Filter plays
   let filteredPlays = infoPlays.filter((play) => {
     if (name && !play.name.toLowerCase().includes(name.toLowerCase())) {
       return false;
     }
-    if (team && !play.team.toLowerCase().includes(team.toLowerCase())) {
+    if (team && !play.match.toLowerCase().includes(team.toLowerCase())) {
       return false;
     }
-    if (validTier && !playIdsWithTier.includes(play.playId)) {
+    if (tier && !play.tier.includes(tier.toUpperCase())) {
       return false;
     }
     return true;
@@ -79,29 +77,14 @@ async function getAllNamesWithFilter(name, tier, team) {
     });
 
     // Group plays
-    let groupNamePlayers = [
-      {
-        plays: [
-          {
-            playId: sortedNamePlayers[0].playId,
-            avatar: getFrontImageUrl(sortedNamePlayers[0].playDataID),
-          },
-        ],
-        name: sortedNamePlayers[0].name,
-      },
-    ];
+    let groupNamePlayers = [mapInvidualToGroupPlays(sortedNamePlayers[0])];
 
     for (let i = 1; i < sortedNamePlayers.length; i++) {
+      let mapToGroupPlays;
+
       if (sortedNamePlayers[i - 1].name != sortedNamePlayers[i].name) {
-        groupNamePlayers.push({
-          plays: [
-            {
-              playId: sortedNamePlayers[i].playId,
-              avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
-            },
-          ],
-          name: sortedNamePlayers[i].name,
-        });
+        mapToGroupPlays = mapInvidualToGroupPlays(sortedNamePlayers[i]);
+        groupNamePlayers.push(mapToGroupPlays);
       } else {
         let lastIndexNamePlayers = groupNamePlayers.length - 1;
 
@@ -112,11 +95,11 @@ async function getAllNamesWithFilter(name, tier, team) {
         ) {
           groupNamePlayers[lastIndexNamePlayers].plays.pop();
         }
+        mapToGroupPlays = mapInvidualToGroupPlays(sortedNamePlayers[i]);
 
-        groupNamePlayers[lastIndexNamePlayers].plays.push({
-          playId: sortedNamePlayers[i].playId,
-          avatar: getFrontImageUrl(sortedNamePlayers[i].playDataID),
-        });
+        groupNamePlayers[lastIndexNamePlayers].plays.push(
+          mapToGroupPlays.plays[0]
+        );
       }
     }
 
@@ -126,33 +109,23 @@ async function getAllNamesWithFilter(name, tier, team) {
   return [];
 }
 
-async function getEditionsByTier(tier) {
-  const tierUpper = tier.toUpperCase();
-
-  if (!TIER_TYPES.includes(tierUpper)) {
-    return [];
-  }
+async function getAllEditions() {
   return await fcl.query({
     cadence: `
-      import Golazos from ${GOLAZOS_ADDRESS}
+        import Golazos from ${GOLAZOS_ADDRESS}
 
-      pub fun main(tier: String): [Golazos.EditionData] {
-        let editions: [Golazos.EditionData] = []
-        var id: UInt64 = 1
-    
-        // Note < , as nextEditionID has not yet been used
-        while id < Golazos.nextEditionID {
-            let edition = Golazos.getEditionData(id: id)!
-            log(edition)
-            if edition.tier == tier {
-                editions.append(edition)
+        pub fun main(): [Golazos.EditionData] {
+            let editions: [Golazos.EditionData] = []
+            var id: UInt64 = 1
+
+            // Note < , as nextEditionID has not yet been used
+            while id < Golazos.nextEditionID {
+                editions.append(Golazos.getEditionData(id: id)!)
+                id = id + 1
             }
-            id = id + 1
+            return editions
         }
-        return editions
-      }
     `,
-    args: (arg, t) => [arg(tierUpper, t.String)],
   });
 }
 
@@ -173,4 +146,20 @@ async function getAllPlays() {
       }
     `,
   });
+}
+
+function mapInvidualToGroupPlays(play) {
+  return {
+    plays: [
+      {
+        playId: play.playId,
+        avatar: getFrontImageUrl(play.playDataID),
+        match: play.match,
+        playType: play.playType,
+        matchSeason: play.matchSeason,
+        tier: play.tier,
+      },
+    ],
+    name: play.name,
+  };
 }
