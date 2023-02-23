@@ -11,6 +11,7 @@ import {
 
 fcl.config({
   "accessNode.api": "https://rest-mainnet.onflow.org",
+  "flow.network": "mainnet",
 });
 
 export default async function handler(req, res) {
