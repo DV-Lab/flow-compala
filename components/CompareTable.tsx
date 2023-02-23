@@ -8,7 +8,7 @@ import { BoxSVG } from "./SVGIcons/BoxSVG";
 
 export const CompareTable: IComponent = () => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();
-  const debouncedQuery = useDebounce(comparedPlays, 1000);
+  const debouncedQuery = useDebounce(comparedPlays, 0);
   const [data, setData] = useState<IPlayInfo[]>();
 
   useEffect(() => {
@@ -38,12 +38,13 @@ export const CompareTable: IComponent = () => {
       <div className=" grid grid-cols-4 gap-4">
         {data &&
           data
-            .sort(
+            ?.sort(
               (a, b) =>
                 -(a.metadata.PlayerJerseyName < b.metadata.PlayerJerseyName)
             )
             .map((play, index) => (
               <CompareItem
+                id={play.id}
                 key={index}
                 metadata={play.metadata}
                 media={play.media}
