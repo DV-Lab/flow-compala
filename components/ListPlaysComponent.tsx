@@ -1,25 +1,10 @@
 import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
 import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
-import { cx, transformTier } from "@utils/tools";
-import { TIER_TYPE } from "constant/tier";
+import { cx, renderStyleOfTier, transformTier } from "@utils/tools";
 import Image from "next/image";
 import { LoadingSVG } from "./SVGIcons/LoadingSVG";
-
-const renderStyleOfTier = (tier: string) => {
-  switch (tier) {
-    case TIER_TYPE.LEGENDARY:
-      return "from-indigo-300 via-purple-300 to-pink-700";
-    case TIER_TYPE.RARE:
-      return "from-white via-yellow-700 to-yellow-900";
-    case TIER_TYPE.UNCOMMON:
-      return "from-green-50 via-green-300 to-green-600";
-    case TIER_TYPE.COMMON:
-      return "from-blue-300 via-blue-400 to-blue-500";
-    default:
-      return null;
-  }
-};
+import { gradientText } from "@configs/styles";
 
 export const ListPlaysComponent: IComponent<{
   playsList: IPlay[];
@@ -64,16 +49,10 @@ export const ListPlaysComponent: IComponent<{
                       width="100%"
                       height="100%"
                       layout="responsive"
-                      className=""
                     />
                   </div>
                   <div className="-translate-x-12 w-3/4">
-                    <h2
-                      className={cx(
-                        "text-xl bg-gradient-to-r text-transparent bg-clip-text",
-                        renderStyleOfTier(tier)
-                      )}
-                    >
+                    <h2 className={cx(gradientText, renderStyleOfTier(tier))}>
                       #{transformTier(tier)}
                     </h2>
                     <h2 className="type text-gray-600 font-medium">
@@ -95,6 +74,7 @@ export const ListPlaysComponent: IComponent<{
                       numOfComparedPlays < DEFAULT_NUMBER_OF_COMPARED_MOMENTS
                     ) && !comparedPlays.includes(playId)
                   }
+                  checked={comparedPlays.includes(playId)}
                 />
               </div>
             )
