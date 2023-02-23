@@ -1,8 +1,12 @@
 type TDarkModeStatus = "dark" | "light" | "auto";
 
 interface IPlay {
-  playId: string;
   avatar: string;
+  match: string;
+  matchSeason: string;
+  playId: string;
+  playType: string;
+  tier: string;
 }
 
 interface IPlayerInfo {

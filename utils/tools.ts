@@ -5,4 +5,7 @@ import classNames from "classnames";
  */
 const cx = classNames;
 
-export { cx };
+const transformTier = (tier: string) => {
+  return tier.charAt(0) + tier.slice(1).toLowerCase();
+};
+export { cx, transformTier };

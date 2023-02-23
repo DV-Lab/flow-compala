@@ -1,6 +1,6 @@
 import useDebounce from "@hooks/useDebounce";
 import { TransitionLayout } from "@layouts/TransitionLayout";
-import { Input } from "@material-tailwind/react";
+import { Input, Radio, Typography } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 
@@ -13,6 +13,8 @@ export const ListPlayerComponent: IComponent = () => {
   const [data, setData] = useState<IPlayerInfo[]>([]);
   const [query, setQuery] = useState<string>("");
   const debouncedSearch = useDebounce(query, 750);
+  const [searchedField, setSearchedField] = useState<string>("name");
+  const [searchValue, setSearchValue] = useState<string>("");
 
   const router = useRouter();
 
@@ -28,8 +30,8 @@ export const ListPlayerComponent: IComponent = () => {
       });
   }, []);
 
-  const searchPlayers = () => {
-    fetch(`/api/players?search=${debouncedSearch}`)
+  const searchPlayersByField = (field: string) => {
+    fetch(`/api/players?${field}=${debouncedSearch}`)
       .then((res) => {
         if (res.status === 200) {
           return res.json();
@@ -39,20 +41,26 @@ export const ListPlayerComponent: IComponent = () => {
         setData(data);
       });
   };
-
+  const handleTierFilter = (event: any) => {
+    setSearchValue("");
+    setQuery(event.target.value);
+    setSearchedField("tier");
+  };
+  const handleSearchInput = (event: any) => {
+    setSearchValue(event.target.value);
+    setQuery(event.target.value);
+    setSearchedField("name");
+  };
   useEffect(() => {
     fetchPlayers();
   }, []);
 
   useEffect(() => {
     if (debouncedSearch) {
-      searchPlayers();
+      searchPlayersByField(searchedField);
     }
   }, [debouncedSearch]);
 
-  const handleChange = (event: any) => {
-    setQuery(event.target.value);
-  };
   return (
     <div className="p-1 flex flex-col gap-8 overflow-y-scroll">
       <div className="search-component flex gap-2">
@@ -66,8 +74,8 @@ export const ListPlayerComponent: IComponent = () => {
           onResizeCapture={undefined}
           color="gray"
           className="text-white p-0"
-          value={query}
-          onChange={handleChange}
+          value={searchValue}
+          onChange={handleSearchInput}
         />
         <div
           className=" pt-4 pb-[1.5] cursor-pointer"
@@ -83,6 +91,71 @@ export const ListPlayerComponent: IComponent = () => {
           />
         </div>
       </div>
+
+      <div className="filter-groups">
+        <div className="tier-group font-serif !text-white !text-lg">
+          <Typography variant="h5" className="font-serif text-white">
+            Tier:{" "}
+          </Typography>
+          <div className="flex flex-col">
+            <span className="flex items-center">
+              <Radio
+                id="Legendary"
+                value="LEGENDARY"
+                name="tier"
+                color="teal"
+                nonce={undefined}
+                onResize={undefined}
+                onResizeCapture={undefined}
+                onChange={handleTierFilter}
+              />
+              <label>Legendary</label>
+            </span>
+            <span className="flex items-center">
+              <Radio
+                id="Rare"
+                value="RARE"
+                name="tier"
+                color="teal"
+                nonce={undefined}
+                onResize={undefined}
+                onResizeCapture={undefined}
+                onChange={handleTierFilter}
+              />
+              <label>Rare</label>
+            </span>
+
+            <span className="flex items-center">
+              <Radio
+                id="Uncommon"
+                value="UNCOMMON"
+                name="tier"
+                color="teal"
+                nonce={undefined}
+                onResize={undefined}
+                onResizeCapture={undefined}
+                onChange={handleTierFilter}
+              />
+              <label>Uncommon</label>
+            </span>
+
+            <span className="flex items-center">
+              <Radio
+                id="Common"
+                value="COMMON"
+                name="tier"
+                color="teal"
+                nonce={undefined}
+                onResize={undefined}
+                onResizeCapture={undefined}
+                onChange={handleTierFilter}
+              />
+              <label>Common</label>
+            </span>
+          </div>
+        </div>
+      </div>
+
       <TransitionLayout location={router.pathname}>
         {data?.length > 0 ? (
           <ul>
