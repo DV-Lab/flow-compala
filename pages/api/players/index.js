@@ -1,7 +1,7 @@
-import { TIER_TYPES } from "@configs/app";
 import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
 import { getFrontImageUrl } from "@utils/app";
+import { TIER_TYPE } from "constant/tier";
 
 //
 fcl.config({
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
-  if (tier && !TIER_TYPES.includes(tier.toUpperCase())) {
+  if (tier && !Object.prototype.hasOwnProperty.call(TIER_TYPE, tier)) {
     return [];
   }
 
