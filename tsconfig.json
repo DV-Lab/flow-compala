@@ -20,6 +20,7 @@
       "@env": ["env.ts"],
       "@apis/*": ["apis/*"],
       "@components/*": ["components/*"],
+      "@constants/*": ["constants/*"],
       "@configs/*": ["configs/*"],
       "@layouts/*": ["layouts/*"],
       "@pages/*": ["pages/*"],
