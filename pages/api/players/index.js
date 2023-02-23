@@ -3,6 +3,7 @@ import { GOLAZOS_ADDRESS } from "@env";
 import * as fcl from "@onflow/fcl";
 import { getFrontImageUrl } from "@utils/app";
 
+//
 fcl.config({
   "accessNode.api": "https://rest-mainnet.onflow.org",
 });
