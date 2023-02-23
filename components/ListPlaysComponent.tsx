@@ -1,10 +1,10 @@
 import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
 import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
-import { cx, renderStyleOfTier, transformTier } from "@utils/tools";
+import { transformTier } from "@utils/tools";
 import Image from "next/image";
+import { CustomTierLabelComponent } from "./CustomTierLableComponent";
 import { LoadingSVG } from "./SVGIcons/LoadingSVG";
-import { gradientText } from "@configs/styles";
 
 export const ListPlaysComponent: IComponent<{
   playsList: IPlay[];
@@ -52,9 +52,7 @@ export const ListPlaysComponent: IComponent<{
                     />
                   </div>
                   <div className="-translate-x-12 w-3/4">
-                    <h2 className={cx(gradientText, renderStyleOfTier(tier))}>
-                      #{transformTier(tier)}
-                    </h2>
+                    <CustomTierLabelComponent text={transformTier(tier)} />
                     <h2 className="type text-gray-600 font-medium">
                       {playType} &#9830; {matchSeason}
                     </h2>

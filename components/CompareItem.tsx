@@ -1,6 +1,8 @@
 import { useCompareListStore } from "@states/app";
-import { cx, renderStyleOfTier, transformTier } from "@utils/tools";
+import { cx, transformTier } from "@utils/tools";
+import { TIER_TYPE } from "constant/tier";
 import Image from "next/image";
+import { useCallback } from "react";
 import { CloseButtonSVG } from "./SVGIcons/CloseButtonSVG";
 
 export const CompareItem: IComponent<{
@@ -19,11 +21,26 @@ export const CompareItem: IComponent<{
     setDecreaseNumOfComparedPlays();
     return;
   };
+  const renderTierStyles = useCallback((tier: string) => {
+    switch (tier) {
+      case TIER_TYPE.LEGENDARY:
+        return "from-indigo-300 via-purple-300 to-pink-700";
+      case TIER_TYPE.RARE:
+        return "from-white via-yellow-700 to-yellow-900";
+      case TIER_TYPE.UNCOMMON:
+        return "from-green-50 via-green-300 to-green-600";
+      case TIER_TYPE.COMMON:
+        return "from-blue-300 via-blue-400 to-blue-500";
+      default:
+        return "";
+    }
+  }, []);
+
   return (
     <div
       className={cx(
         "bg-gradient-to-r p-[2px] rounded-lg overflow-hidden",
-        renderStyleOfTier(tier)
+        renderTierStyles(tier)
       )}
     >
       <div className="bg-black back overflow-hidden rounded-lg h-full">
