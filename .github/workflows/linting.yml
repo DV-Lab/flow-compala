@@ -8,7 +8,7 @@ on:
       - main
 jobs:
   linting:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [16.x]
