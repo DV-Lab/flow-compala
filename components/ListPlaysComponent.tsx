@@ -4,7 +4,6 @@ import { useCompareListStore } from "@states/app";
 import { cx, transformTier } from "@utils/tools";
 import { TIER_TYPE } from "constant/tier";
 import Image from "next/image";
-
 import { LoadingSVG } from "./SVGIcons/LoadingSVG";
 
 const renderStyleOfTier = (tier: string) => {

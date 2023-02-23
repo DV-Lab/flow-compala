@@ -29,7 +29,7 @@ module.exports = {
     "prettier/prettier": "error",
     "arrow-body-style": "off",
     "prefer-arrow-callback": "off",
-    "simple-import-sort/imports": "error",
+    "simple-import-sort/imports": "off",
     "simple-import-sort/exports": "error",
     "import/first": "error",
     "import/newline-after-import": "error",

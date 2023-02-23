@@ -11,24 +11,23 @@ export const CompareTable: IComponent = () => {
   const debouncedQuery = useDebounce(comparedPlays, 1000);
   const [data, setData] = useState<IPlayInfo[]>();
 
-  const fetchDetailsOfComparesPlays = () => {
-    fetch("/api/plays/details", {
-      method: "POST", // or 'PUT'
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ playIds: debouncedQuery }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setData(data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
   useEffect(() => {
+    const fetchDetailsOfComparesPlays = () => {
+      fetch("/api/plays/details", {
+        method: "POST", // or 'PUT'
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ playIds: debouncedQuery }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          setData(data);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    };
     if (debouncedQuery) {
       fetchDetailsOfComparesPlays();
     }

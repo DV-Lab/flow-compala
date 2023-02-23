@@ -30,36 +30,37 @@ export const ListPlayerComponent: IComponent = () => {
       });
   }, []);
 
-  const searchPlayersByField = (field: string) => {
-    fetch(`/api/players?${field}=${debouncedSearch}`)
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
-      })
-      .then((data) => {
-        setData(data);
-      });
-  };
-  const handleTierFilter = (event: any) => {
+  const handleTierFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(event);
     setSearchValue("");
     setQuery(event.target.value);
     setSearchedField("tier");
   };
-  const handleSearchInput = (event: any) => {
+  const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
     setQuery(event.target.value);
     setSearchedField("name");
   };
   useEffect(() => {
     fetchPlayers();
-  }, []);
+  }, [fetchPlayers]);
 
   useEffect(() => {
+    const searchPlayersByField = (field: string) => {
+      fetch(`/api/players?${field}=${debouncedSearch}`)
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          setData(data);
+        });
+    };
     if (debouncedSearch) {
       searchPlayersByField(searchedField);
     }
-  }, [debouncedSearch]);
+  }, [debouncedSearch, searchedField]);
 
   return (
     <div className="p-1 flex flex-col gap-8 overflow-y-scroll">

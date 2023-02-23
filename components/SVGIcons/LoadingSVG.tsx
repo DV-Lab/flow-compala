@@ -1,8 +1,6 @@
 import { cx } from "@utils/tools";
-import dynamic from "next/dynamic";
-import React from "react";
 
-export const LoadingSVGR: ISvgComponent = ({
+export const LoadingSVG: ISvgComponent = ({
   width = "100%",
   height = "100%",
   className = "fill-blue-600",
@@ -28,7 +26,3 @@ export const LoadingSVGR: ISvgComponent = ({
     </svg>
   );
 };
-
-export const LoadingSVG = dynamic(() =>
-  import("./LoadingSVG").then((mod) => mod.LoadingSVGR)
-);
