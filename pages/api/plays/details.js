@@ -50,7 +50,7 @@ async function getPlayAndEditionByPlayId(playId, editions, nftMoments) {
     const play = await getPlayById(playId);
     const playDataId = play.metadata.PlayDataID;
 
-    const edition = editions.find((edition) => edition.id == playId);
+    const edition = editions.find((edition) => edition.playID == playId);
     const nftMoment = nftMoments.find((nft) => nft.editionId == edition.id);
 
     const playAndEdition = {
