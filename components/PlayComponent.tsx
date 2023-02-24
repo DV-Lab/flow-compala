@@ -1,10 +1,10 @@
-import { Checkbox } from "@material-tailwind/react";
 import { transformTier } from "@utils/tools";
 import Image from "next/image";
 import { CustomTierLabelComponent } from "./CustomTierLableComponent";
 
 interface IPlayComponentProps extends IPlay {
   translate?: boolean;
+  className?: string;
 }
 export const PlayComponent: IComponent<IPlayComponentProps> = ({
   avatar,
@@ -14,9 +14,10 @@ export const PlayComponent: IComponent<IPlayComponentProps> = ({
   playType,
   tier,
   translate,
+  className,
 }) => {
   return (
-    <div key={playId} className="flex items-center">
+    <div key={playId} className={`flex items-center ${className}`}>
       <div className="play-info grow flex items-center">
         <div
           className={`wrapper w-[180px] h-[180px] ${

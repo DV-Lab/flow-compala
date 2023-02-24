@@ -1,24 +1,30 @@
 import { usePreferredPlaysStorageStore } from "@states/app";
-import { useRouter } from "next/router";
 import styles from "./styles.module.scss";
 
 import { PlayComponent } from "@components/PlayComponent";
-import { TransitionLayout } from "@layouts/TransitionLayout";
 
 const StorageDropdown: IComponent = () => {
-  const { preferredPlays, setHidden } = usePreferredPlaysStorageStore();
-  const router = useRouter();
-  const handleClick = () => {
-    setHidden();
-    router.push("/checkout");
+  const { preferredPlays, setPreferredPlays } = usePreferredPlaysStorageStore();
+  const handleRemovePlay = (id: string) => {
+    const newPreferredPlays = preferredPlays.filter(
+      (play) => play.playId !== id
+    );
+    setPreferredPlays(newPreferredPlays);
   };
 
   return (
-    <div className="cart-dropdown absolute  w-[350px] h-[450px] flex flex-col p-[20px] rounded-lg border border-white dark:bg-black top-[75px] right-[50px] z-20 items-center">
-      <div className="cart-items h-[80%] overflow-scroll">
+    <div className="cart-dropdown absolute  w-[400px] h-[500px] flex flex-col py-2 rounded-lg border border-white dark:bg-black top-[75px] right-[50px] z-20 items-center overflow-x-hidden">
+      <div className="cart-items h-[95%]  overflow-y-scroll -translate-x-4">
         {preferredPlays?.length > 0 ? (
           preferredPlays.map((play, index) => (
-            <PlayComponent key={index} {...play} />
+            <div className={`${styles.play}`} key={index}>
+              <PlayComponent key={index} {...play} className="flex flex-col" />
+              <div className={styles.removeBtn}>
+                <button onClick={() => handleRemovePlay(play.playId)}>
+                  Remove
+                </button>
+              </div>
+            </div>
           ))
         ) : (
           <span className="empty-message text-white h-full">
@@ -26,9 +32,6 @@ const StorageDropdown: IComponent = () => {
           </span>
         )}
       </div>
-      <button className={styles.goToStorage} onClick={handleClick}>
-        GO TO STORAGE
-      </button>
     </div>
   );
 };

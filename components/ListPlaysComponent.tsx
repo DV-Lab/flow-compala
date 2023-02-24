@@ -1,9 +1,6 @@
 import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
 import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
-import { transformTier } from "@utils/tools";
-import Image from "next/image";
-import { CustomTierLabelComponent } from "./CustomTierLableComponent";
 import { PlayComponent } from "./PlayComponent";
 import { LoadingSVG } from "./SVGIcons/LoadingSVG";
 
@@ -41,7 +38,7 @@ export const ListPlaysComponent: IComponent<{
         <div>
           {playsList.map((play, index) => (
             <div key={index} className="flex items-center">
-              <PlayComponent {...play} translate />
+              <PlayComponent {...play} translate className="grow" />
               <Checkbox
                 nonce={undefined}
                 onResize={undefined}

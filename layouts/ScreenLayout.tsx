@@ -1,9 +1,18 @@
 import DarkModeButton from "@components/DarkModeButton";
 import StorageDropdown from "@components/Storage/StorageDropdown";
-import StorageIcon from "@components/Storage/StorageIcon";
+import { StorageIcon as StorageIconStatic } from "@components/Storage/StorageIcon";
 import { HomeSVG } from "@components/SVGIcons/HomeSVG";
 import { usePreferredPlaysStorageStore } from "@states/app";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+
+const StorageIcon = dynamic<React.ComponentProps<typeof StorageIconStatic>>(
+  () =>
+    import("@components/Storage/StorageIcon").then((data) => data.StorageIcon),
+  {
+    ssr: false,
+  }
+);
 
 export const ScreenLayout: IComponent = ({ children }) => {
   const router = useRouter();
