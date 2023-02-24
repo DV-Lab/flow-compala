@@ -30,6 +30,10 @@ export const CompareItem: IComponent<{
   const { preferredPlays, setPreferredPlays } = usePreferredPlaysStorageStore();
 
   const handleAddToStorage = (play: IPlay) => {
+    const existedPlay = preferredPlays.find((p) => p.playId === play.playId);
+    if (existedPlay) {
+      return;
+    }
     const newPreferredPlays = [...preferredPlays, play];
     setPreferredPlays(newPreferredPlays);
   };

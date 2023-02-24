@@ -1,4 +1,5 @@
 import create from "zustand";
+import { devtools, persist } from "zustand/middleware";
 
 interface IAppState {
   darkMode: TDarkModeStatus;
@@ -20,19 +21,28 @@ interface ICompareListState {
   setDecreaseNumOfComparedPlays: () => void;
 }
 
-const useCompareListStore = create<ICompareListState>((set, get) => ({
-  comparedPlays: [],
-  numOfComparedPlays: 0,
-  setComparedPlays: (playIds: string[]) => {
-    set({ comparedPlays: playIds });
-  },
-  setIncreaseNumOfComparedPlays: () => {
-    set({ numOfComparedPlays: get().numOfComparedPlays + 1 });
-  },
-  setDecreaseNumOfComparedPlays: () => {
-    set({ numOfComparedPlays: get().numOfComparedPlays - 1 });
-  },
-}));
+const useCompareListStore = create<ICompareListState>()(
+  devtools(
+    persist(
+      (set, get) => ({
+        comparedPlays: [],
+        numOfComparedPlays: 0,
+        setComparedPlays: (playIds: string[]) => {
+          set({ comparedPlays: playIds });
+        },
+        setIncreaseNumOfComparedPlays: () => {
+          set({ numOfComparedPlays: get().numOfComparedPlays + 1 });
+        },
+        setDecreaseNumOfComparedPlays: () => {
+          set({ numOfComparedPlays: get().numOfComparedPlays - 1 });
+        },
+      }),
+      {
+        name: "Compare-List-Storage",
+      }
+    )
+  )
+);
 
 interface IPreferredPlaysStorageState {
   hidden: boolean;
@@ -41,17 +51,24 @@ interface IPreferredPlaysStorageState {
   setPreferredPlays: (list: IPlay[]) => void;
 }
 
-const usePreferredPlaysStorageStore = create<IPreferredPlaysStorageState>(
-  (set, get) => ({
-    hidden: true,
-    preferredPlays: [],
-    setHidden: () => {
-      set({ hidden: !get().hidden });
-    },
-    setPreferredPlays: (list) => {
-      set({ preferredPlays: list });
-    },
-  })
+const usePreferredPlaysStorageStore = create<IPreferredPlaysStorageState>()(
+  devtools(
+    persist(
+      (set, get) => ({
+        hidden: true,
+        preferredPlays: [],
+        setHidden: () => {
+          set({ hidden: !get().hidden });
+        },
+        setPreferredPlays: (list) => {
+          set({ preferredPlays: list });
+        },
+      }),
+      {
+        name: "Preferred-Plays-Storage",
+      }
+    )
+  )
 );
 
 export { useAppStore, useCompareListStore, usePreferredPlaysStorageStore };
