@@ -40,7 +40,7 @@ jobs:
 
       - name: Install Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn
+        run: yarn & yarn add -D eslint-plugin-react@latest
 
       - name: Run Eslint Checking
         run: eslint . --ext .js,.jsx,.ts,.tsx

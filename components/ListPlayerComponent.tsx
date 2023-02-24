@@ -1,10 +1,9 @@
-import { gradientText } from "@configs/styles";
 import useDebounce from "@hooks/useDebounce";
 import { TransitionLayout } from "@layouts/TransitionLayout";
 import { Input, Radio, Typography } from "@material-tailwind/react";
-import { cx, renderStyleOfTier } from "@utils/tools";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
+import { CustomTierLabelComponent } from "./CustomTierLableComponent";
 
 import { ListPlaysComponent } from "./ListPlaysComponent";
 import { CloseButtonSVG } from "./SVGIcons/CloseButtonSVG";
@@ -111,11 +110,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <label
-                className={cx(gradientText, renderStyleOfTier("LEGENDARY"))}
-              >
-                #Legendary
-              </label>
+              <CustomTierLabelComponent text="Legendary" />
             </span>
             <span className="flex items-center">
               <Radio
@@ -128,9 +123,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <label className={cx(gradientText, renderStyleOfTier("RARE"))}>
-                #Rare
-              </label>
+              <CustomTierLabelComponent text="Rare" />
             </span>
 
             <span className="flex items-center">
@@ -144,13 +137,8 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <label
-                className={cx(gradientText, renderStyleOfTier("UNCOMMON"))}
-              >
-                #Uncommon
-              </label>
+              <CustomTierLabelComponent text="Uncommon" />
             </span>
-
             <span className="flex items-center">
               <Radio
                 id="Common"
@@ -162,14 +150,11 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <label className={cx(gradientText, renderStyleOfTier("COMMON"))}>
-                #Common
-              </label>
+              <CustomTierLabelComponent text="Common" />
             </span>
           </div>
         </div>
       </div>
-
       <TransitionLayout location={router.pathname}>
         {data?.length > 0 ? (
           <ul>
