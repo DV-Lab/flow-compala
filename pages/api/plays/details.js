@@ -8,6 +8,8 @@ import {
   getLegalImageUrl,
   getPopupVideoUrl,
 } from "@utils/app";
+import fs from "fs";
+import path from "path";
 
 fcl.config({
   "accessNode.api": "https://rest-mainnet.onflow.org",
@@ -21,10 +23,13 @@ export default async function handler(req, res) {
         const { playIds } = req.body;
 
         const editions = await getAllEditions();
+        const nftMoments = getAllNftMoments();
 
         const multiCalls = [];
         for (let i = 0; i < playIds.length; i++) {
-          multiCalls.push(getPlayAndEditionByPlayId(playIds[i], editions));
+          multiCalls.push(
+            getPlayAndEditionByPlayId(playIds[i], editions, nftMoments)
+          );
         }
 
         const response = await Promise.all(multiCalls);
@@ -40,12 +45,13 @@ export default async function handler(req, res) {
   }
 }
 
-async function getPlayAndEditionByPlayId(playId, editions) {
+async function getPlayAndEditionByPlayId(playId, editions, nftMoments) {
   try {
     const play = await getPlayById(playId);
     const playDataId = play.metadata.PlayDataID;
 
-    const edition = editions.find((edition) => edition.id == playId);
+    const edition = editions.find((edition) => edition.playID == playId);
+    const nftMoment = nftMoments.find((nft) => nft.editionId == edition.id);
 
     const playAndEdition = {
       ...play,
@@ -58,10 +64,12 @@ async function getPlayAndEditionByPlayId(playId, editions) {
         idleVideoUrl: getIdleVideoUrl(playDataId),
       },
       edition: {
+        id: edition.id,
         tier: edition.tier,
         maxMintSize: edition.maxMintSize,
         numMinted: edition.numMinted,
       },
+      nftMoment,
     };
 
     return playAndEdition;
@@ -73,20 +81,20 @@ async function getPlayAndEditionByPlayId(playId, editions) {
 async function getAllEditions() {
   return await fcl.query({
     cadence: `
-          import Golazos from ${GOLAZOS_ADDRESS}
-  
-          pub fun main(): [Golazos.EditionData] {
-              let editions: [Golazos.EditionData] = []
-              var id: UInt64 = 1
-  
-              // Note < , as nextEditionID has not yet been used
-              while id < Golazos.nextEditionID {
-                  editions.append(Golazos.getEditionData(id: id)!)
-                  id = id + 1
-              }
-              return editions
-          }
-      `,
+      import Golazos from ${GOLAZOS_ADDRESS}
+
+      pub fun main(): [Golazos.EditionData] {
+        let editions: [Golazos.EditionData] = []
+        var id: UInt64 = 1
+
+        // Note < , as nextEditionID has not yet been used
+        while id < Golazos.nextEditionID {
+            editions.append(Golazos.getEditionData(id: id)!)
+            id = id + 1
+        }
+        return editions
+      }
+    `,
   });
 }
 
@@ -101,4 +109,11 @@ async function getPlayById(playId) {
         `,
     args: (arg, t) => [arg(playId.toString(), t.UInt64)],
   });
+}
+
+function getAllNftMoments() {
+  const filePath = path.join(process.cwd(), "data/nftMoments.json");
+  const jsonData = fs.readFileSync(filePath);
+  const nftMoments = JSON.parse(jsonData);
+  return nftMoments;
 }
