@@ -34,4 +34,24 @@ const useCompareListStore = create<ICompareListState>((set, get) => ({
   },
 }));
 
-export { useAppStore, useCompareListStore };
+interface IPreferredPlaysStorageState {
+  hidden: boolean;
+  preferredPlays: IPlay[];
+  setHidden: () => void;
+  setPreferredPlays: (list: IPlay[]) => void;
+}
+
+const usePreferredPlaysStorageStore = create<IPreferredPlaysStorageState>(
+  (set, get) => ({
+    hidden: true,
+    preferredPlays: [],
+    setHidden: () => {
+      set({ hidden: !get().hidden });
+    },
+    setPreferredPlays: (list) => {
+      set({ preferredPlays: list });
+    },
+  })
+);
+
+export { useAppStore, useCompareListStore, usePreferredPlaysStorageStore };

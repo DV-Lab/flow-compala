@@ -8,7 +8,7 @@ const DarkModeButton: IComponent = () => {
 
   return (
     <div
-      className={`${styles.toggleThemeWrapper} active:scale-75 ease-in-out duration-500 p-2 m-6 absolute top-0 right-0 cursor-pointer z-30`}
+      className={`${styles.toggleThemeWrapper} active:scale-75 ease-in-out duration-500 p-2 m-6 cursor-pointer z-30`}
     >
       <label className={styles.toggleTheme} htmlFor="checkbox">
         <input
