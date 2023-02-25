@@ -112,7 +112,7 @@ async function getPlayById(playId) {
 }
 
 function getAllNftMoments() {
-  const filePath = path.join(process.cwd(), "data/nftMoments.json");
+  const filePath = path.join(process.cwd(), "data/nftMoments_v2.json");
   const jsonData = fs.readFileSync(filePath);
   const nftMoments = JSON.parse(jsonData);
   return nftMoments;
