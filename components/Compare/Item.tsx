@@ -1,3 +1,4 @@
+import { CustomizedTierLabelComponent } from "@components/Moments/CustomizedTierLabelComponent";
 import {
   useCompareListStore,
   usePreferredPlaysStorageStore,
@@ -5,18 +6,18 @@ import {
 import { cx, transformTier } from "@utils/tools";
 import { TIER_TYPE } from "constant/tier";
 import Image from "next/image";
-import { useCallback, useMemo } from "react";
-import { CompareChart } from "./Chart";
+import { useCallback, useMemo, useState } from "react";
 import { CloseButtonSVG } from "../SVGIcons/CloseButtonSVG";
 import { HeartSVG } from "../SVGIcons/HeartSVG";
-import { CustomizedTierLabelComponent } from "@components/Moments/CustomizedTierLabelComponent";
+import { CompareChart } from "./Chart";
 
 export const CompareItem: IComponent<{
   id: string;
   metadata: IPlayMetadata;
   media: IPlayMedia;
   edition: IPlayEdition;
-}> = ({ id, metadata, media, edition }) => {
+  nftMoment: IPlayNft;
+}> = ({ id, metadata, media, edition, nftMoment }) => {
   const {
     MatchHomeTeam,
     MatchAwayTeam,
@@ -29,9 +30,12 @@ export const CompareItem: IComponent<{
   } = metadata;
   const { tier } = edition;
   const { frontImageUrl } = media;
+  const { amount, sales } = nftMoment;
   const { comparedPlays, setComparedPlays, setDecreaseNumOfComparedPlays } =
     useCompareListStore();
   const { preferredPlays, setPreferredPlays } = usePreferredPlaysStorageStore();
+
+  const [clicked, setClicked] = useState<boolean>(false);
 
   const handleAddToStorage = (play: IPlay) => {
     const existedPlay = preferredPlays.find((p) => p.playId === play.playId);
@@ -40,6 +44,7 @@ export const CompareItem: IComponent<{
     }
     const newPreferredPlays = [...preferredPlays, play];
     setPreferredPlays(newPreferredPlays);
+    setClicked(true);
   };
 
   const handleDismiss = (playId: string) => {
@@ -48,7 +53,6 @@ export const CompareItem: IComponent<{
     setDecreaseNumOfComparedPlays();
     return;
   };
-
   const renderTierStyles = useCallback((tier: string) => {
     switch (tier) {
       case TIER_TYPE.LEGENDARY:
@@ -75,7 +79,7 @@ export const CompareItem: IComponent<{
 
   const renderInfo = useMemo(
     () => (
-      <div className="play-info grow flex flex-col px-4 gap-2 w-full">
+      <div className="play-info grow flex flex-col gap-2 w-full">
         <h1 className="text-4xl font-semibold">
           {PlayerFirstName + PlayerLastName}
         </h1>
@@ -86,7 +90,7 @@ export const CompareItem: IComponent<{
         <h2 className="play-type text-gray-600 font-medium text-lg">
           {PlayType} &#9830; {MatchSeason}
         </h2>
-        <div className="flex justify-center">
+        <div className="flex justify-center py-3">
           <div className="flex gap-2">
             <div className="grow text-right">
               <h2 className="play-match text-gray-400 font-medium text-lg ">
@@ -140,7 +144,8 @@ export const CompareItem: IComponent<{
               <HeartSVG
                 height={32}
                 width={32}
-                className="text-gray-400 hover:text-orange-500"
+                color={`${clicked ? "red" : ""} `}
+                className={`${clicked ? "text-transparent" : ""} `}
               />
             </div>
             <div
@@ -168,9 +173,44 @@ export const CompareItem: IComponent<{
           </div>
         </div>
 
-        <div className="info p-2 flex flex-col justify-around items-start -translate-y-16">
+        <div className="info px-4 flex flex-col justify-around items-start -translate-y-16">
           {renderInfo}
-          <CompareChart />
+          <div className="flex flex-col gap-4">
+            <div>
+              <h2 className="play-type  text-white font-semibold text-3xl">
+                Current sale:
+              </h2>
+
+              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
+                Price: {sales?.currentPrice ?? "-"} USD
+              </p>
+              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
+                For sale: {sales?.forSale ?? "-"}
+              </p>
+            </div>
+            <div>
+              <h2 className="play-type  text-white font-semibold text-3xl">
+                History sale:
+              </h2>
+
+              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
+                Average price: {sales?.avgPrice ?? "-"} USD
+              </p>
+              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
+                Highest price: {sales?.highestPrice ?? "-"} USD
+              </p>
+            </div>
+            <div className="py-4">
+              <h2 className="play-type  text-white font-semibold text-3xl">
+                Edition data
+              </h2>
+              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
+                Total edition: {amount.maximum}
+              </p>
+            </div>
+          </div>
+
+          <CompareChart amountData={amount} />
         </div>
       </div>
     </div>

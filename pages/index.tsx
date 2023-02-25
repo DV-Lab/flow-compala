@@ -8,7 +8,7 @@ const AppScreen = dynamic<React.ComponentProps<typeof AppScreenStatic>>(
   {
     ssr: false,
     loading: () => (
-      <div className="h-screen">
+      <div className="h-full">
         <ComponentLoading />
       </div>
     ),

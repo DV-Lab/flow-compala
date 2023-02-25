@@ -22,8 +22,6 @@ export const CompareTable: IComponent = () => {
       })
         .then((response) => response.json())
         .then((data) => {
-          console.log({ data });
-          console.log({ nft: data[0].nftMoment });
           setData(data);
         })
         .catch((error) => {
@@ -51,6 +49,7 @@ export const CompareTable: IComponent = () => {
                 metadata={play.metadata}
                 media={play.media}
                 edition={play.edition}
+                nftMoment={play.nftMoment}
               />
             ))}
       </div>
@@ -58,7 +57,7 @@ export const CompareTable: IComponent = () => {
     [data]
   );
   return (
-    <div className="text-white p-2 h-[80vh]">
+    <div className="text-white p-2">
       {numOfComparedPlays > 0 ? (
         renderData
       ) : (

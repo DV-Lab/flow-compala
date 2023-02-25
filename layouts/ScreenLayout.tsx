@@ -18,7 +18,7 @@ export const ScreenLayout: IComponent = ({ children }) => {
   const router = useRouter();
   const { hidden } = usePreferredPlaysStorageStore();
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full min-h-screen flex flex-col">
       <div className="py-8 px-8 z-30 w-fit" onClick={() => router.push("/")}>
         <HomeSVG
           className="cursor-pointer hover:scale-105 duration-150  dark:text-white"

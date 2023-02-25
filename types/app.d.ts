@@ -49,7 +49,13 @@ interface IPlayEdition {
   maxMintSize: string;
   numMinted: string;
 }
-
+interface IAmountNft {
+  [ownedNfts: string]: number;
+  [inReserves: string]: number;
+  [inPacks: string]: number;
+  [maximum: string]: number;
+  [burned: string]: number;
+}
 interface IPlayNft {
   editionId: number;
   playerName: string;
@@ -59,13 +65,7 @@ interface IPlayNft {
     avgPrice?: string;
     highestPrice?: string;
   };
-  amount: {
-    ownedNfts: number;
-    inReserves: number;
-    inPacks: number;
-    maximum: number;
-    burned: number;
-  };
+  amount: IAmountNft;
 }
 
 interface IPlayInfo {
@@ -74,5 +74,5 @@ interface IPlayInfo {
   metadata: IPlayMetadata;
   media: IPlayMedia;
   edition: IPlayEdition;
-  nftMoment?: IPlayNft;
+  nftMoment: IPlayNft;
 }
