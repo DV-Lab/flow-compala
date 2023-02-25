@@ -3,8 +3,23 @@ import { Typography } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import { useEffect, useMemo, useState } from "react";
 
-import { CompareItem } from "./Item";
+import { CompareItem as CompareItemStatic } from "./Item";
+
+import { LoadingSVG } from "@components/SVGIcons/LoadingSVG";
+import dynamic from "next/dynamic";
 import { BoxSVG } from "../SVGIcons/BoxSVG";
+
+const CompareItem = dynamic<React.ComponentProps<typeof CompareItemStatic>>(
+  () => import("./Item").then((data) => data.CompareItem),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="!w-full h-[80vh] flex items-center justify-center">
+        <LoadingSVG width={48} height={48} className="fill-teal-600" />
+      </div>
+    ),
+  }
+);
 
 export const CompareTable: IComponent = () => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();

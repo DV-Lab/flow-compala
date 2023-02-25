@@ -80,7 +80,7 @@ export const CompareItem: IComponent<{
   const renderInfo = useMemo(
     () => (
       <div className="play-info grow flex flex-col gap-2 w-full">
-        <h1 className="text-4xl font-semibold">
+        <h1 className="min-h-[80px] text-4xl font-semibold">
           {PlayerFirstName + PlayerLastName}
         </h1>
         <CustomizedTierLabelComponent
