@@ -8,7 +8,10 @@ export const CustomCheckBox: IComponent<{
 }> = ({ id }) => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();
   const [checked, setChecked] = useState<boolean>(true);
-  const isCheck = useMemo(() => comparedPlays.includes(id), [comparedPlays]);
+  const isCheck = useMemo(
+    () => comparedPlays.includes(id),
+    [comparedPlays, id]
+  );
   return (
     <Checkbox
       nonce={undefined}
@@ -20,7 +23,6 @@ export const CustomCheckBox: IComponent<{
           numOfComparedPlays < DEFAULT_NUMBER_OF_COMPARED_MOMENTS
         ) && !comparedPlays.includes(id)
       }
-      defaultChecked
       checked={isCheck && checked}
       onChange={(e) => setChecked(e.target.checked)}
     />

@@ -49,7 +49,7 @@ export const CompareTable: IComponent = () => {
 
   const renderData = useMemo(
     () => (
-      <div className={`grid grid-cols-3 gap-4`}>
+      <div className={`grid grid-cols-3 gap-4 h-full`}>
         {data && data.length > 0 ? (
           data
             ?.sort(
@@ -76,7 +76,7 @@ export const CompareTable: IComponent = () => {
     [data]
   );
   return (
-    <div className="text-white p-2 h-[95%] text-serif">
+    <div className="text-white p-2 h-[90%] text-serif">
       {numOfComparedPlays > 0 ? (
         renderData
       ) : (

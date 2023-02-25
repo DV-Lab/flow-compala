@@ -40,6 +40,20 @@ export const CompareChart: IComponent<{
         },
       },
     },
+    // plugins: {
+    //   tooltips: {
+    //     mode: "x",
+    //     intersect: true,
+    //     enabled: true,
+    //     callbacks: {
+    //       title: () => 1,
+    //       label: (item: any) => {
+    //         console.log({ item });
+    //         return 1;
+    //       },
+    //     },
+    //   },
+    // },
   };
 
   const chartData: number[] = [];

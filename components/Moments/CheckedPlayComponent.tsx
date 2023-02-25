@@ -39,7 +39,7 @@ export const CheckedPlayComponent: IComponent<{
             return (
               <div
                 key={index}
-                className="flex items-center cursor-auto"
+                className="flex items-center cursor-pointer hover:-translate-y-2 duration-150"
                 onClick={() => handleCheck(play.playId)}
               >
                 <PlayComponent {...play} translate className="grow" />

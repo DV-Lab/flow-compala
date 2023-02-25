@@ -7,7 +7,7 @@ import {
 import { cx, transformTier } from "@utils/tools";
 import { TIER_TYPE } from "constant/tier";
 import Image from "next/image";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { CloseButtonSVG } from "../SVGIcons/CloseButtonSVG";
 import { HeartSVG } from "../SVGIcons/HeartSVG";
 import { CompareChart } from "./Chart";
@@ -30,7 +30,7 @@ export const CompareItem: IComponent<{
     PlayType,
   } = metadata;
   const { tier } = edition;
-  const { frontImageUrl } = media;
+  const { frontImageUrl, popupVideoUrl, idleVideoUrl } = media;
   const { amount, sales } = nftMoment;
   const { comparedPlays, setComparedPlays, setDecreaseNumOfComparedPlays } =
     useCompareListStore();
@@ -40,7 +40,7 @@ export const CompareItem: IComponent<{
     const foundedPlay = preferredPlays.find((p) => p.playId === id);
     if (foundedPlay) return true;
     return false;
-  }, [preferredPlays]);
+  }, [preferredPlays, id]);
 
   const handleAddToStorage = (play: IPlay) => {
     const existedPlay = preferredPlays.find((p) => p.playId === play.playId);
@@ -168,11 +168,11 @@ export const CompareItem: IComponent<{
   return (
     <div
       className={cx(
-        "bg-gradient-to-r p-[2px] rounded-lg overflow-hidden",
+        "bg-gradient-to-r p-[2px] rounded-lg ",
         renderTierStyles(tier)
       )}
     >
-      <div className="bg-black back overflow-hidden rounded-lg h-full">
+      <div className="dark:bg-black back rounded-lg  overflow-hidden">
         <div className="flex flex-col items-center">
           <div className="control-button-group w-full flex justify-between gap-1 z-10 p-2">
             <div
@@ -201,19 +201,29 @@ export const CompareItem: IComponent<{
               />
             </div>
           </div>
-          {/* <CarouselComponent /> */}
-
-          <div className="wrapper w-[480px] h-[480px] -translate-y-16">
-            <Image
-              src={media.heroImageUrl}
-              alt={metadata.PlayerJerseyName}
-              width="100%"
-              height="100%"
-              layout="responsive"
-            />
-          </div>
+          <CarouselComponent className="-translate-y-20">
+            <div className="wrapper w-[500px] h-[500px]">
+              <Image
+                src={media.heroImageUrl}
+                alt={metadata.PlayerJerseyName}
+                width="100%"
+                height="100%"
+                layout="responsive"
+              />
+            </div>
+            <div className="flex justify-center items-center pt-16">
+              <video controls style={{ width: "400px", height: "400px" }}>
+                <source src={popupVideoUrl} />
+              </video>
+            </div>
+            <div className="flex justify-center items-center pt-16">
+              <video controls style={{ width: "400px", height: "400px" }}>
+                <source src={idleVideoUrl} />
+              </video>
+            </div>
+          </CarouselComponent>
         </div>
-        <div className="info px-4 flex flex-col justify-around items-start -translate-y-16">
+        <div className="info px-4 flex flex-col justify-around items-start -translate-y-20">
           {renderInfo}
           {renderNftInfo}
           <CompareChart amountData={amount} />
