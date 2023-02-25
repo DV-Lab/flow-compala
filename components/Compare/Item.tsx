@@ -5,9 +5,11 @@ import {
 import { cx, transformTier } from "@utils/tools";
 import { TIER_TYPE } from "constant/tier";
 import Image from "next/image";
-import { useCallback } from "react";
-import { CloseButtonSVG } from "./SVGIcons/CloseButtonSVG";
-import { HeartSVG } from "./SVGIcons/HeartSVG";
+import { useCallback, useMemo } from "react";
+import { CompareChart } from "./Chart";
+import { CloseButtonSVG } from "../SVGIcons/CloseButtonSVG";
+import { HeartSVG } from "../SVGIcons/HeartSVG";
+import { CustomizedTierLabelComponent } from "@components/Moments/CustomizedTierLabelComponent";
 
 export const CompareItem: IComponent<{
   id: string;
@@ -16,14 +18,16 @@ export const CompareItem: IComponent<{
   edition: IPlayEdition;
 }> = ({ id, metadata, media, edition }) => {
   const {
-    PlayerFirstName,
-    PlayerLastName,
     MatchHomeTeam,
     MatchAwayTeam,
     MatchSeason,
+    MatchHomeScore,
+    MatchAwayScore,
+    PlayerFirstName,
+    PlayerLastName,
     PlayType,
   } = metadata;
-  const { tier, numMinted } = edition;
+  const { tier } = edition;
   const { frontImageUrl } = media;
   const { comparedPlays, setComparedPlays, setDecreaseNumOfComparedPlays } =
     useCompareListStore();
@@ -60,6 +64,63 @@ export const CompareItem: IComponent<{
     }
   }, []);
 
+  const play: IPlay = {
+    avatar: frontImageUrl,
+    match: `${MatchHomeTeam} vs ${MatchAwayTeam}`,
+    matchSeason: MatchSeason,
+    playId: id,
+    playType: PlayType,
+    tier: tier,
+  };
+
+  const renderInfo = useMemo(
+    () => (
+      <div className="play-info grow flex flex-col px-4 gap-2 w-full">
+        <h1 className="text-4xl font-semibold">
+          {PlayerFirstName + PlayerLastName}
+        </h1>
+        <CustomizedTierLabelComponent
+          className="text-lg"
+          text={transformTier(tier)}
+        />
+        <h2 className="play-type text-gray-600 font-medium text-lg">
+          {PlayType} &#9830; {MatchSeason}
+        </h2>
+        <div className="flex justify-center">
+          <div className="flex gap-2">
+            <div className="grow text-right">
+              <h2 className="play-match text-gray-400 font-medium text-lg ">
+                {MatchHomeTeam}
+              </h2>
+
+              <h2 className="play-match text-gray-400 font-medium text-lg ">
+                {MatchHomeScore}
+              </h2>
+            </div>
+            <div className="text-center">
+              <h2 className="play-match text-gray-400 font-medium text-lg">
+                vs
+              </h2>
+              <h2 className="play-match text-gray-400 font-medium text-lg">
+                -
+              </h2>
+            </div>
+            <div className="grow text-left">
+              <h2 className="play-match text-gray-400 font-medium text-lg">
+                {MatchAwayTeam}
+              </h2>
+
+              <h2 className="play-match text-gray-400 font-medium text-lg">
+                {MatchAwayScore}
+              </h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    ),
+    []
+  );
+
   return (
     <div
       className={cx(
@@ -73,14 +134,6 @@ export const CompareItem: IComponent<{
             <div
               className="cursor-pointer"
               onClick={() => {
-                const play: IPlay = {
-                  avatar: frontImageUrl,
-                  match: `${MatchHomeTeam} vs ${MatchAwayTeam}`,
-                  matchSeason: MatchSeason,
-                  playId: id,
-                  playType: PlayType,
-                  tier: tier,
-                };
                 handleAddToStorage(play);
               }}
             >
@@ -115,15 +168,9 @@ export const CompareItem: IComponent<{
           </div>
         </div>
 
-        <div className="info -translate-y-36 p-2 flex flex-col justify-around items-start">
-          <h1 className="text-2xl text-left">
-            {PlayerFirstName} {PlayerLastName}
-          </h1>
-          <h3>#{transformTier(tier)}</h3>
-          <span>
-            Lowest ask:
-            <h1>{numMinted}$</h1>
-          </span>
+        <div className="info p-2 flex flex-col justify-around items-start -translate-y-16">
+          {renderInfo}
+          <CompareChart />
         </div>
       </div>
     </div>

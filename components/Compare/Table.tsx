@@ -3,8 +3,8 @@ import { Typography } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import { useEffect, useMemo, useState } from "react";
 
-import { CompareItem } from "./CompareItem";
-import { BoxSVG } from "./SVGIcons/BoxSVG";
+import { CompareItem } from "./Item";
+import { BoxSVG } from "../SVGIcons/BoxSVG";
 
 export const CompareTable: IComponent = () => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();
@@ -22,6 +22,8 @@ export const CompareTable: IComponent = () => {
       })
         .then((response) => response.json())
         .then((data) => {
+          console.log({ data });
+          console.log({ nft: data[0].nftMoment });
           setData(data);
         })
         .catch((error) => {
@@ -62,7 +64,7 @@ export const CompareTable: IComponent = () => {
       ) : (
         <div className="h-full text-white flex items-center justify-center gap-8">
           <BoxSVG className="text-gray-300" />
-          <Typography variant="h5"> No item found</Typography>
+          <Typography variant="h5"> Chose moments to compare</Typography>
         </div>
       )}
     </div>

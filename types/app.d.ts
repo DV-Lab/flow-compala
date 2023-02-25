@@ -50,10 +50,29 @@ interface IPlayEdition {
   numMinted: string;
 }
 
+interface IPlayNft {
+  editionId: number;
+  playerName: string;
+  sales?: {
+    currentPrice?: string;
+    forSale?: string;
+    avgPrice?: string;
+    highestPrice?: string;
+  };
+  amount: {
+    ownedNfts: number;
+    inReserves: number;
+    inPacks: number;
+    maximum: number;
+    burned: number;
+  };
+}
+
 interface IPlayInfo {
   id: string;
   classification: string;
   metadata: IPlayMetadata;
   media: IPlayMedia;
   edition: IPlayEdition;
+  nftMoment?: IPlayNft;
 }

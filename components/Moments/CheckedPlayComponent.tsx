@@ -1,10 +1,10 @@
+import { LoadingSVG } from "@components/SVGIcons/LoadingSVG";
 import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
 import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import { PlayComponent } from "./PlayComponent";
-import { LoadingSVG } from "./SVGIcons/LoadingSVG";
 
-export const ListPlaysComponent: IComponent<{
+export const CheckedPlayComponent: IComponent<{
   playsList: IPlay[];
 }> = ({ playsList }) => {
   const {

@@ -1,16 +1,15 @@
+import { CloseButtonSVG } from "@components/SVGIcons/CloseButtonSVG";
+import { LoadingSVG } from "@components/SVGIcons/LoadingSVG";
+import { SearchSVG } from "@components/SVGIcons/SearchSVG";
 import useDebounce from "@hooks/useDebounce";
 import { TransitionLayout } from "@layouts/TransitionLayout";
 import { Input, Radio, Typography } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
-import { CustomTierLabelComponent } from "./CustomTierLableComponent";
+import { CheckedPlayComponent } from "./CheckedPlayComponent";
+import { CustomizedTierLabelComponent } from "./CustomizedTierLabelComponent";
 
-import { ListPlaysComponent } from "./ListPlaysComponent";
-import { CloseButtonSVG } from "./SVGIcons/CloseButtonSVG";
-import { LoadingSVG } from "./SVGIcons/LoadingSVG";
-import { SearchSVG } from "./SVGIcons/SearchSVG";
-
-export const ListPlayerComponent: IComponent = () => {
+export const PlayerListComponent: IComponent = () => {
   const [data, setData] = useState<IPlayerInfo[]>([]);
   const [query, setQuery] = useState<string>("");
   const debouncedSearch = useDebounce(query, 750);
@@ -110,7 +109,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <CustomTierLabelComponent text="Legendary" />
+              <CustomizedTierLabelComponent text="Legendary" />
             </span>
             <span className="flex items-center">
               <Radio
@@ -123,7 +122,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <CustomTierLabelComponent text="Rare" />
+              <CustomizedTierLabelComponent text="Rare" />
             </span>
 
             <span className="flex items-center">
@@ -137,7 +136,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <CustomTierLabelComponent text="Uncommon" />
+              <CustomizedTierLabelComponent text="Uncommon" />
             </span>
             <span className="flex items-center">
               <Radio
@@ -150,7 +149,7 @@ export const ListPlayerComponent: IComponent = () => {
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
               />
-              <CustomTierLabelComponent text="Common" />
+              <CustomizedTierLabelComponent text="Common" />
             </span>
           </div>
         </div>
@@ -161,7 +160,7 @@ export const ListPlayerComponent: IComponent = () => {
             {data.map(({ name, plays }, index) => (
               <li key={index}>
                 <h1 className="p-2 bg-gray-900 rounded-lg">{name}</h1>
-                <ListPlaysComponent playsList={plays} />
+                <CheckedPlayComponent playsList={plays} />
               </li>
             ))}
           </ul>
