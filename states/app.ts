@@ -21,28 +21,19 @@ interface ICompareListState {
   setDecreaseNumOfComparedPlays: () => void;
 }
 
-const useCompareListStore = create<ICompareListState>()(
-  devtools(
-    persist(
-      (set, get) => ({
-        comparedPlays: [],
-        numOfComparedPlays: 0,
-        setComparedPlays: (playIds: string[]) => {
-          set({ comparedPlays: playIds });
-        },
-        setIncreaseNumOfComparedPlays: () => {
-          set({ numOfComparedPlays: get().numOfComparedPlays + 1 });
-        },
-        setDecreaseNumOfComparedPlays: () => {
-          set({ numOfComparedPlays: get().numOfComparedPlays - 1 });
-        },
-      }),
-      {
-        name: "Compare-List-Storage",
-      }
-    )
-  )
-);
+const useCompareListStore = create<ICompareListState>()((set, get) => ({
+  comparedPlays: [],
+  numOfComparedPlays: 0,
+  setComparedPlays: (playIds: string[]) => {
+    set({ comparedPlays: playIds });
+  },
+  setIncreaseNumOfComparedPlays: () => {
+    set({ numOfComparedPlays: get().numOfComparedPlays + 1 });
+  },
+  setDecreaseNumOfComparedPlays: () => {
+    set({ numOfComparedPlays: get().numOfComparedPlays - 1 });
+  },
+}));
 
 interface IPreferredPlaysStorageState {
   hidden: boolean;

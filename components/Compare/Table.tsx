@@ -1,5 +1,4 @@
 import useDebounce from "@hooks/useDebounce";
-import { Typography } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import { useEffect, useMemo, useState } from "react";
 
@@ -23,7 +22,7 @@ const CompareItem = dynamic<React.ComponentProps<typeof CompareItemStatic>>(
 
 export const CompareTable: IComponent = () => {
   const { comparedPlays, numOfComparedPlays } = useCompareListStore();
-  const debouncedQuery = useDebounce(comparedPlays, 0);
+  const debouncedQuery = useDebounce(comparedPlays, 50);
   const [data, setData] = useState<IPlayInfo[]>();
 
   useEffect(() => {
@@ -50,8 +49,8 @@ export const CompareTable: IComponent = () => {
 
   const renderData = useMemo(
     () => (
-      <div className={`grid grid-cols-3 gap-4`}>
-        {data &&
+      <div className={`grid grid-cols-3 gap-4 h-full`}>
+        {data && data.length > 0 ? (
           data
             ?.sort(
               (a, b) =>
@@ -66,19 +65,26 @@ export const CompareTable: IComponent = () => {
                 edition={play.edition}
                 nftMoment={play.nftMoment}
               />
-            ))}
+            ))
+        ) : (
+          <div className="!w-full h-[80vh] flex items-center justify-center">
+            <LoadingSVG width={48} height={48} className="fill-teal-600" />
+          </div>
+        )}
       </div>
     ),
     [data]
   );
   return (
-    <div className="text-white p-2">
+    <div className="text-white p-2 h-[90%] text-serif">
       {numOfComparedPlays > 0 ? (
         renderData
       ) : (
         <div className="h-full text-white flex items-center justify-center gap-8">
           <BoxSVG className="text-gray-300" />
-          <Typography variant="h5"> Chose moments to compare</Typography>
+          <h5 className="text-2xl">
+            Please choose the moments you want to compare
+          </h5>
         </div>
       )}
     </div>

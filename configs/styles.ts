@@ -1,2 +1,2 @@
 export const gradientText =
-  "text-xl bg-gradient-to-r text-transparent bg-clip-text";
+  "text-lg bg-gradient-to-r text-transparent bg-clip-text";
