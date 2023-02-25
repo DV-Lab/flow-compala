@@ -18,22 +18,25 @@ export const CompareChart: IComponent<{
   amountData: IAmountNft;
 }> = ({ amountData }) => {
   const options = {
-    title: {
-      display: true,
-      text: "Edition Data",
-      color: "#ffffff",
-    },
     scales: {
       y: {
         title: {
           display: true,
           text: "%",
+          color: "white",
+          font: {
+            size: 16,
+          },
         },
         suggestedMax: 100,
         suggestedMin: 0,
         ticks: {
           beginAtZero: true,
-          stepSize: 50,
+          stepSize: 25,
+          color: "white",
+          font: {
+            size: 16,
+          },
         },
       },
     },
@@ -51,7 +54,6 @@ export const CompareChart: IComponent<{
     labels: ["Burned", "Owned", "In Reverses", "In packs"],
     datasets: [
       {
-        label: "Edition Data",
         data: chartData,
         backgroundColor: ["#EB3B62", "#DE378E", "#ADF85A", "#FDED45"],
         borderWidth: 0,
