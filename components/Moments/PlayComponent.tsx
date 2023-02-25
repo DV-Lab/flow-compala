@@ -1,6 +1,6 @@
 import { transformTier } from "@utils/tools";
 import Image from "next/image";
-import { CustomTierLabelComponent } from "./CustomTierLableComponent";
+import { CustomizedTierLabelComponent } from "./CustomizedTierLabelComponent";
 
 interface IPlayComponentProps extends IPlay {
   translate?: boolean;
@@ -33,7 +33,7 @@ export const PlayComponent: IComponent<IPlayComponentProps> = ({
           />
         </div>
         <div className={`${translate ? "-translate-x-12 w-3/4" : ""}`}>
-          <CustomTierLabelComponent text={transformTier(tier)} />
+          <CustomizedTierLabelComponent text={transformTier(tier)} />
           <h2 className="type text-gray-600 font-medium">
             {playType} &#9830; {matchSeason}
           </h2>

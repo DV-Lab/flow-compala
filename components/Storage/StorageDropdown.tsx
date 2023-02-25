@@ -1,7 +1,6 @@
+import { PlayComponent } from "@components/Moments/PlayComponent";
 import { usePreferredPlaysStorageStore } from "@states/app";
 import styles from "./styles.module.scss";
-
-import { PlayComponent } from "@components/PlayComponent";
 
 const StorageDropdown: IComponent = () => {
   const { preferredPlays, setPreferredPlays } = usePreferredPlaysStorageStore();
@@ -14,12 +13,12 @@ const StorageDropdown: IComponent = () => {
 
   return (
     <div className="cart-dropdown absolute  w-[400px] h-[500px] flex flex-col py-2 rounded-lg border border-white dark:bg-black top-[75px] right-[50px] z-20 items-center overflow-x-hidden">
-      <div className="cart-items h-[95%]  overflow-y-scroll -translate-x-4">
+      <div className="cart-items h-[95%] overflow-x-hidden overflow-y-scroll -translate-x-4">
         {preferredPlays?.length > 0 ? (
           preferredPlays.map((play, index) => (
             <div className={`${styles.play}`} key={index}>
-              <PlayComponent key={index} {...play} className="flex flex-col" />
-              <div className={styles.removeBtn}>
+              <PlayComponent key={index} {...play} />
+              <div className={`${styles.removeBtn} duration-150`}>
                 <button onClick={() => handleRemovePlay(play.playId)}>
                   Remove
                 </button>
