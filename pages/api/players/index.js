@@ -25,7 +25,10 @@ export default async function handler(req, res) {
 }
 
 async function getAllNamesWithFilter(name, tier, team) {
-  if (tier && !Object.prototype.hasOwnProperty.call(TIER_TYPE, tier)) {
+  if (
+    tier &&
+    !Object.prototype.hasOwnProperty.call(TIER_TYPE, tier.toUpperCase())
+  ) {
     return [];
   }
 
@@ -61,7 +64,7 @@ async function getAllNamesWithFilter(name, tier, team) {
     if (team && !play.match.toLowerCase().includes(team.toLowerCase())) {
       return false;
     }
-    if (tier && !play.tier.includes(tier.toUpperCase())) {
+    if (tier && !(play.tier.toUpperCase() == tier.toUpperCase())) {
       return false;
     }
     return true;
