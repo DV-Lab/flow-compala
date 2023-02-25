@@ -4,7 +4,7 @@ const intercept = require("intercept-stdout");
 
 const nextConfig = nextTranslate({
   reactStrictMode: true,
-  swcMinify: true,
+  swcMinify: false,
   output: "standalone",
   images: {
     domains: ["assets.laligagolazos.com"],
