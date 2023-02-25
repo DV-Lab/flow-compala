@@ -122,7 +122,17 @@ export const CompareItem: IComponent<{
         </div>
       </div>
     ),
-    []
+    [
+      MatchHomeTeam,
+      MatchAwayTeam,
+      MatchSeason,
+      MatchHomeScore,
+      MatchAwayScore,
+      PlayerFirstName,
+      PlayerLastName,
+      PlayType,
+      tier,
+    ]
   );
 
   return (
