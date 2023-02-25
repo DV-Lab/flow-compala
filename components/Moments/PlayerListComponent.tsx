@@ -62,7 +62,7 @@ export const PlayerListComponent: IComponent = () => {
   }, [debouncedSearch, searchedField]);
 
   return (
-    <div className="p-1 flex flex-col gap-8 overflow-y-scroll">
+    <div className="p-1 flex flex-col gap-8 overflow-y-scroll h-full">
       <div className="search-component flex gap-2">
         <div className=" pt-4 pb-[1.5]">
           <SearchSVG className="text-white" width={24} height={24} />

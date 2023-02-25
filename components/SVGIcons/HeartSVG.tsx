@@ -3,12 +3,13 @@ import React from "react";
 export const HeartSVG: ISvgComponent = ({
   width = "96",
   height = "96",
-  className = "text-red-700",
+  color,
+  className = "text-white",
 }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      fill="none"
+      fill={color}
       viewBox="0 0 24 24"
       strokeWidth={1.5}
       stroke="currentColor"

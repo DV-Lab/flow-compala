@@ -4,3 +4,10 @@ export const TIER_TYPE: { [key: string]: string } = {
   UNCOMMON: "UNCOMMON",
   COMMON: "COMMON",
 };
+
+export const AMOUNT_DATA_MAP_ARRAY: { [key: string]: number } = {
+  ownedNfts: 1,
+  inReserves: 2,
+  inPacks: 3,
+  burned: 0,
+};

@@ -3,9 +3,11 @@ import { PlayerListComponent } from "@components/Moments/PlayerListComponent";
 
 export const AppScreen: IComponent = () => {
   return (
-    <main className="min-h-screen dark:text-white p-4">
-      <div className="grid grid-cols-4 gap-8">
-        <PlayerListComponent />
+    <main className="h-full dark:text-white p-4">
+      <div className="grid grid-cols-4 gap-8 h-full">
+        <div className="relative min-h-[90vh]">
+          <PlayerListComponent />
+        </div>
         <div className="col-span-3">
           <CompareTable />
         </div>
