@@ -1,3 +1,4 @@
+import { CarouselComponent } from "@components/CarouselComponent";
 import { CustomizedTierLabelComponent } from "@components/Moments/CustomizedTierLabelComponent";
 import {
   useCompareListStore,
@@ -35,7 +36,11 @@ export const CompareItem: IComponent<{
     useCompareListStore();
   const { preferredPlays, setPreferredPlays } = usePreferredPlaysStorageStore();
 
-  const [clicked, setClicked] = useState<boolean>(false);
+  const clicked = useMemo(() => {
+    const foundedPlay = preferredPlays.find((p) => p.playId === id);
+    if (foundedPlay) return true;
+    return false;
+  }, [preferredPlays]);
 
   const handleAddToStorage = (play: IPlay) => {
     const existedPlay = preferredPlays.find((p) => p.playId === play.playId);
@@ -44,7 +49,6 @@ export const CompareItem: IComponent<{
     }
     const newPreferredPlays = [...preferredPlays, play];
     setPreferredPlays(newPreferredPlays);
-    setClicked(true);
   };
 
   const handleDismiss = (playId: string) => {
@@ -81,7 +85,7 @@ export const CompareItem: IComponent<{
     () => (
       <div className="play-info grow flex flex-col gap-2 w-full">
         <h1 className="min-h-[80px] text-4xl font-semibold">
-          {PlayerFirstName + PlayerLastName}
+          {PlayerFirstName + " " + PlayerLastName}
         </h1>
         <CustomizedTierLabelComponent
           className="text-lg"
@@ -92,14 +96,9 @@ export const CompareItem: IComponent<{
         </h2>
         <div className="flex justify-center py-3">
           <div className="flex gap-2">
-            <div className="grow text-right">
-              <h2 className="play-match text-gray-400 font-medium text-lg ">
-                {MatchHomeTeam}
-              </h2>
-
-              <h2 className="play-match text-gray-400 font-medium text-lg ">
-                {MatchHomeScore}
-              </h2>
+            <div className="grow text-right text-gray-400  text-lg font-semibold">
+              <h2>{MatchHomeTeam}</h2>
+              <h2>{MatchHomeScore}</h2>
             </div>
             <div className="text-center">
               <h2 className="play-match text-gray-400 font-medium text-lg">
@@ -109,14 +108,9 @@ export const CompareItem: IComponent<{
                 -
               </h2>
             </div>
-            <div className="grow text-left">
-              <h2 className="play-match text-gray-400 font-medium text-lg">
-                {MatchAwayTeam}
-              </h2>
-
-              <h2 className="play-match text-gray-400 font-medium text-lg">
-                {MatchAwayScore}
-              </h2>
+            <div className="grow text-left text-gray-400  text-lg font-semibold">
+              <h2>{MatchAwayTeam}</h2>
+              <h2>{MatchAwayScore}</h2>
             </div>
           </div>
         </div>
@@ -133,6 +127,42 @@ export const CompareItem: IComponent<{
       PlayType,
       tier,
     ]
+  );
+
+  const renderNftInfo = useMemo(
+    () => (
+      <div className="flex flex-col gap-4">
+        <div>
+          <h2 className="text-white font-semibold text-3xl">Current sale:</h2>
+          <p className="px-4 text-gray-400 font-medium text-xl py-1">
+            Price: {sales?.currentPrice ?? "-"} USD
+          </p>
+          <p className="px-4 text-gray-400 font-medium text-xl py-1">
+            For sale: {sales?.forSale ?? "-"}
+          </p>
+        </div>
+        <div>
+          <h2 className="play-type  text-white font-semibold text-3xl">
+            History sale:
+          </h2>
+          <p className="play-type px-4 text-gray-400 font-medium text-xl py-1">
+            Average price: {sales?.avgPrice ?? "-"} USD
+          </p>
+          <p className="play-type px-4 text-gray-400 font-medium text-xl py-1">
+            Highest price: {sales?.highestPrice ?? "-"} USD
+          </p>
+        </div>
+        <div className="py-4">
+          <h2 className="play-type  text-white font-semibold text-3xl">
+            Edition data
+          </h2>
+          <p className="play-type px-4 text-gray-400 font-medium text-xl py-2">
+            Total edition: {amount.maximum}
+          </p>
+        </div>
+      </div>
+    ),
+    [sales, amount]
   );
 
   return (
@@ -171,6 +201,7 @@ export const CompareItem: IComponent<{
               />
             </div>
           </div>
+          {/* <CarouselComponent /> */}
 
           <div className="wrapper w-[480px] h-[480px] -translate-y-16">
             <Image
@@ -182,44 +213,9 @@ export const CompareItem: IComponent<{
             />
           </div>
         </div>
-
         <div className="info px-4 flex flex-col justify-around items-start -translate-y-16">
           {renderInfo}
-          <div className="flex flex-col gap-4">
-            <div>
-              <h2 className="play-type  text-white font-semibold text-3xl">
-                Current sale:
-              </h2>
-
-              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
-                Price: {sales?.currentPrice ?? "-"} USD
-              </p>
-              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
-                For sale: {sales?.forSale ?? "-"}
-              </p>
-            </div>
-            <div>
-              <h2 className="play-type  text-white font-semibold text-3xl">
-                History sale:
-              </h2>
-
-              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
-                Average price: {sales?.avgPrice ?? "-"} USD
-              </p>
-              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
-                Highest price: {sales?.highestPrice ?? "-"} USD
-              </p>
-            </div>
-            <div className="py-4">
-              <h2 className="play-type  text-white font-semibold text-3xl">
-                Edition data
-              </h2>
-              <p className="play-type px-4 text-gray-200 font-medium text-xl py-1">
-                Total edition: {amount.maximum}
-              </p>
-            </div>
-          </div>
-
+          {renderNftInfo}
           <CompareChart amountData={amount} />
         </div>
       </div>

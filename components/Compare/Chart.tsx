@@ -22,7 +22,7 @@ export const CompareChart: IComponent<{
       y: {
         title: {
           display: true,
-          text: "%",
+          text: "percentage (%)",
           color: "white",
           font: {
             size: 16,

@@ -1,6 +1,6 @@
+import { CustomCheckBox } from "@components/CustomCheckbox";
 import { LoadingSVG } from "@components/SVGIcons/LoadingSVG";
 import { DEFAULT_NUMBER_OF_COMPARED_MOMENTS } from "@configs/app";
-import { Checkbox } from "@material-tailwind/react";
 import { useCompareListStore } from "@states/app";
 import { PlayComponent } from "./PlayComponent";
 
@@ -31,29 +31,22 @@ export const CheckedPlayComponent: IComponent<{
       return;
     }
   };
-
   return (
     <div>
       {playsList.length > 0 ? (
         <div>
-          {playsList.map((play, index) => (
-            <div key={index} className="flex items-center">
-              <PlayComponent {...play} translate className="grow" />
-              <Checkbox
-                nonce={undefined}
-                onResize={undefined}
-                onResizeCapture={undefined}
+          {playsList.map((play, index) => {
+            return (
+              <div
+                key={index}
+                className="flex items-center cursor-auto"
                 onClick={() => handleCheck(play.playId)}
-                disabled={
-                  !(
-                    numOfComparedPlays === 0 ||
-                    numOfComparedPlays < DEFAULT_NUMBER_OF_COMPARED_MOMENTS
-                  ) && !comparedPlays.includes(play.playId)
-                }
-                checked={comparedPlays.includes(play.playId)}
-              />
-            </div>
-          ))}
+              >
+                <PlayComponent {...play} translate className="grow" />
+                <CustomCheckBox id={play.playId} />
+              </div>
+            );
+          })}
         </div>
       ) : (
         <div className="!w-full flex items-center justify-center">
