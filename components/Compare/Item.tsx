@@ -125,10 +125,9 @@ export const CompareItem: IComponent<{
       MatchSeason,
       MatchHomeScore,
       MatchAwayScore,
-      PlayerFirstName,
-      PlayerLastName,
       PlayType,
       tier,
+      name,
     ]
   );
 

@@ -11,7 +11,7 @@ import { CustomizedTierLabelComponent } from "./CustomizedTierLabelComponent";
 
 export const PlayerListComponent: IComponent = () => {
   const router = useRouter();
-  const [data, setData] = useState<IPlayerInfo[]>([]);
+  const [data, setData] = useState<IPlayerInfo[] | null>();
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [filterQuery, setFilterQuery] = useState<string>("");
   const debouncedSearch = useDebounce(searchQuery, 750);
@@ -44,7 +44,7 @@ export const PlayerListComponent: IComponent = () => {
       ...initialCheckedTierRadioArray,
       [event.target.value]: event.target.checked,
     });
-    setData([]);
+    setData(null);
     setFilterQuery(event.target.value);
   };
 
@@ -178,14 +178,18 @@ export const PlayerListComponent: IComponent = () => {
         </div>
       </div>
       <TransitionLayout location={router.pathname}>
-        {data?.length > 0 ? (
+        {data ? (
           <ul>
-            {data.map(({ name, plays }, index) => (
-              <li key={index}>
-                <h1 className="p-2 bg-gray-900 rounded-lg">{name}</h1>
-                <CheckedPlayComponent playsList={plays} />
-              </li>
-            ))}
+            {data.length > 0 ? (
+              data.map(({ name, plays }, index) => (
+                <li key={index}>
+                  <h1 className="p-2 bg-gray-900 rounded-lg">{name}</h1>
+                  <CheckedPlayComponent playsList={plays} />
+                </li>
+              ))
+            ) : (
+              <div className="text-xl text-center"> No items found</div>
+            )}
           </ul>
         ) : (
           <div className="!w-full !h-full flex items-center justify-center">

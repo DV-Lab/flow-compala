@@ -27,7 +27,7 @@ export const CarouselComponent: IComponent<{
         index: number,
         label: string
       ) => ReactNode)
-    | undefined = (clickHandler, isSelected, index, label) => {
+    | undefined = (clickHandler, isSelected, index) => {
     if (isSelected) {
       return <li style={{ ...indicatorStyles, background: "#2dd4bf" }} />;
     }
