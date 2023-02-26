@@ -20,13 +20,13 @@ export const ScreenLayout: IComponent = ({ children }) => {
   const { hidden } = usePreferredPlaysStorageStore();
   return (
     <div className="h-full min-h-screen flex flex-col">
-      <div className="pt-8 z-30 w-fit" onClick={() => router.push("/")}>
-        {/* <HomeSVG
-          className="cursor-pointer hover:scale-105 duration-150  dark:text-white"
-          width={28}
-          height={28}
-        /> */}
-        <Image src="/logo.png" alt="deVin Logo" width={210} height={60} />
+      <div className="pt-8 pl-6 z-30 w-fit" onClick={() => router.push("/")}>
+        <Image
+          src="/compala_logo.png"
+          alt="deVin Logo"
+          width={200}
+          height={200}
+        />
       </div>
       <div className="flex items-center absolute top-0 right-0">
         <div>
