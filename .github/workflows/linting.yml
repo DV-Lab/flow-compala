@@ -2,7 +2,7 @@ name: Linting
 on:
   push:
     branches:
-      - main
+      - staging
   pull_request:
     branches:
       - main
@@ -26,21 +26,9 @@ jobs:
       - name: Install Yarn & Eslint
         run: npm install -g yarn eslint
 
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-
-      - uses: actions/cache@v3
-        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-
-
       - name: Install Dependencies
         if: steps.yarn-cache.outputs.cache-hit != 'true'
-        run: yarn & yarn add -D eslint-plugin-react@latest
+        run: yarn
 
       - name: Run Eslint Checking
         run: eslint . --ext .js,.jsx,.ts,.tsx
