@@ -3,20 +3,28 @@ import { LoadingSVG } from "@components/SVGIcons/LoadingSVG";
 import { SearchSVG } from "@components/SVGIcons/SearchSVG";
 import useDebounce from "@hooks/useDebounce";
 import { TransitionLayout } from "@layouts/TransitionLayout";
-import { Input, Radio, Typography } from "@material-tailwind/react";
+import { Input, Radio } from "@material-tailwind/react";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useState } from "react";
 import { CheckedPlayComponent } from "./CheckedPlayComponent";
 import { CustomizedTierLabelComponent } from "./CustomizedTierLabelComponent";
 
 export const PlayerListComponent: IComponent = () => {
+  const router = useRouter();
   const [data, setData] = useState<IPlayerInfo[]>([]);
   const [query, setQuery] = useState<string>("");
   const debouncedSearch = useDebounce(query, 750);
   const [searchedField, setSearchedField] = useState<string>("name");
   const [searchValue, setSearchValue] = useState<string>("");
-
-  const router = useRouter();
+  const initialCheckedTierRadioArray = {
+    LEGENDARY: false,
+    RARE: false,
+    UNCOMMON: false,
+    COMMON: false,
+  };
+  const [checkedTierRadioArray, setCheckedTierRadioArray] = useState<{
+    [key: string]: boolean;
+  }>(initialCheckedTierRadioArray);
 
   const fetchPlayers = useCallback(() => {
     fetch(`/api/players`)
@@ -31,10 +39,16 @@ export const PlayerListComponent: IComponent = () => {
   }, []);
 
   const handleTierFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setCheckedTierRadioArray({
+      ...initialCheckedTierRadioArray,
+      [event.target.value]: event.target.checked,
+    });
+    setData([]);
     setSearchValue("");
     setQuery(event.target.value);
     setSearchedField("tier");
   };
+
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
     setQuery(event.target.value);
@@ -94,9 +108,7 @@ export const PlayerListComponent: IComponent = () => {
 
       <div className="filter-groups">
         <div className="tier-group font-serif !text-white !text-lg">
-          <Typography variant="h5" className="font-serif text-white">
-            Tier:{" "}
-          </Typography>
+          <h2 className="font-serif text-white">Tier: </h2>
           <div className="flex flex-col">
             <span className="flex items-center">
               <Radio
@@ -108,6 +120,7 @@ export const PlayerListComponent: IComponent = () => {
                 onResize={undefined}
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
+                checked={checkedTierRadioArray.LEGENDARY}
               />
               <CustomizedTierLabelComponent text="Legendary" />
             </span>
@@ -121,6 +134,7 @@ export const PlayerListComponent: IComponent = () => {
                 onResize={undefined}
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
+                checked={checkedTierRadioArray.RARE}
               />
               <CustomizedTierLabelComponent text="Rare" />
             </span>
@@ -135,6 +149,7 @@ export const PlayerListComponent: IComponent = () => {
                 onResize={undefined}
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
+                checked={checkedTierRadioArray.UNCOMMON}
               />
               <CustomizedTierLabelComponent text="Uncommon" />
             </span>
@@ -148,8 +163,18 @@ export const PlayerListComponent: IComponent = () => {
                 onResize={undefined}
                 onResizeCapture={undefined}
                 onChange={handleTierFilter}
+                checked={checkedTierRadioArray.COMMON}
               />
               <CustomizedTierLabelComponent text="Common" />
+            </span>
+            <span
+              className="mt-6 mx-8 font-serif font-medium hover:text-red-400 border-b border-transparent hover:border-b hover:border-red-400 cursor-pointer w-fit duration-200"
+              onClick={() => {
+                setCheckedTierRadioArray(initialCheckedTierRadioArray);
+                fetchPlayers();
+              }}
+            >
+              Clear
             </span>
           </div>
         </div>
