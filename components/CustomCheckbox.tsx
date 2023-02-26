@@ -17,6 +17,7 @@ export const CustomCheckBox: IComponent<{
       nonce={undefined}
       onResize={undefined}
       onResizeCapture={undefined}
+      color="teal"
       disabled={
         !(
           numOfComparedPlays === 0 ||

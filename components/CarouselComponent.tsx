@@ -29,13 +29,7 @@ export const CarouselComponent: IComponent<{
       ) => ReactNode)
     | undefined = (clickHandler, isSelected, index, label) => {
     if (isSelected) {
-      return (
-        <li
-          style={{ ...indicatorStyles, background: "#2dd4bf" }}
-          aria-label={`Selected: ${label} ${index + 1}`}
-          title={`Selected: ${label} ${index + 1}`}
-        />
-      );
+      return <li style={{ ...indicatorStyles, background: "#2dd4bf" }} />;
     }
     return (
       <li
@@ -46,8 +40,6 @@ export const CarouselComponent: IComponent<{
         key={index}
         role="button"
         tabIndex={0}
-        title={`${label} ${index + 1}`}
-        aria-label={`${label} ${index + 1}`}
       />
     );
   };
