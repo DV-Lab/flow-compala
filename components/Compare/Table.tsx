@@ -51,21 +51,16 @@ export const CompareTable: IComponent = () => {
     () => (
       <div className={`grid grid-cols-3 gap-4 h-full`}>
         {data && data.length > 0 ? (
-          data
-            ?.sort(
-              (a, b) =>
-                -(a.metadata.PlayerJerseyName < b.metadata.PlayerJerseyName)
-            )
-            .map((play, index) => (
-              <CompareItem
-                id={play.id}
-                key={index}
-                metadata={play.metadata}
-                media={play.media}
-                edition={play.edition}
-                nftMoment={play.nftMoment}
-              />
-            ))
+          data?.map((play, index) => (
+            <CompareItem
+              id={play.id}
+              key={index}
+              metadata={play.metadata}
+              media={play.media}
+              edition={play.edition}
+              nftMoment={play.nftMoment}
+            />
+          ))
         ) : (
           <div className="!w-full h-[80vh] flex items-center justify-center">
             <LoadingSVG width={48} height={48} className="fill-teal-600" />

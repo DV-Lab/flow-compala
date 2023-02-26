@@ -12,10 +12,11 @@ import { CustomizedTierLabelComponent } from "./CustomizedTierLabelComponent";
 export const PlayerListComponent: IComponent = () => {
   const router = useRouter();
   const [data, setData] = useState<IPlayerInfo[]>([]);
-  const [query, setQuery] = useState<string>("");
-  const debouncedSearch = useDebounce(query, 750);
-  const [searchedField, setSearchedField] = useState<string>("name");
-  const [searchValue, setSearchValue] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [filterQuery, setFilterQuery] = useState<string>("");
+  const debouncedSearch = useDebounce(searchQuery, 750);
+  const debouncedFilter = useDebounce(filterQuery, 500);
+
   const initialCheckedTierRadioArray = {
     LEGENDARY: false,
     RARE: false,
@@ -44,23 +45,19 @@ export const PlayerListComponent: IComponent = () => {
       [event.target.value]: event.target.checked,
     });
     setData([]);
-    setSearchValue("");
-    setQuery(event.target.value);
-    setSearchedField("tier");
+    setFilterQuery(event.target.value);
   };
 
   const handleSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-    setQuery(event.target.value);
-    setSearchedField("name");
+    setSearchQuery(event.target.value);
   };
   useEffect(() => {
     fetchPlayers();
   }, [fetchPlayers]);
 
   useEffect(() => {
-    const searchPlayersByField = (field: string) => {
-      fetch(`/api/players?${field}=${debouncedSearch}`)
+    const searchPlayers = () => {
+      fetch(`/api/players?name=${debouncedSearch}&tier=${debouncedFilter}`)
         .then((res) => {
           if (res.status === 200) {
             return res.json();
@@ -70,10 +67,10 @@ export const PlayerListComponent: IComponent = () => {
           setData(data);
         });
     };
-    if (debouncedSearch) {
-      searchPlayersByField(searchedField);
+    if (debouncedSearch || debouncedFilter) {
+      searchPlayers();
     }
-  }, [debouncedSearch, searchedField]);
+  }, [debouncedSearch, debouncedFilter]);
 
   return (
     <div className="min-h-[80vh] p-1 flex flex-col gap-8 overflow-y-scroll h-full">
@@ -88,13 +85,14 @@ export const PlayerListComponent: IComponent = () => {
           onResizeCapture={undefined}
           color="gray"
           className="text-white p-0"
-          value={searchValue}
+          value={searchQuery}
           onChange={handleSearchInput}
         />
         <div
           className=" pt-4 pb-[1.5] cursor-pointer"
           onClick={() => {
-            setQuery("");
+            setSearchQuery("");
+            setFilterQuery("");
             fetchPlayers();
           }}
         >

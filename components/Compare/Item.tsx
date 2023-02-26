@@ -27,8 +27,13 @@ export const CompareItem: IComponent<{
     MatchAwayScore,
     PlayerFirstName,
     PlayerLastName,
+    PlayerKnownName,
     PlayType,
   } = metadata;
+  const name =
+    PlayerKnownName !== ""
+      ? PlayerKnownName
+      : PlayerFirstName + " " + PlayerLastName;
   const { tier } = edition;
   const { frontImageUrl, popupVideoUrl, idleVideoUrl } = media;
   const { amount, sales } = nftMoment;
@@ -84,9 +89,7 @@ export const CompareItem: IComponent<{
   const renderInfo = useMemo(
     () => (
       <div className="play-info grow flex flex-col gap-2 w-full">
-        <h1 className="min-h-[80px] text-4xl font-semibold">
-          {PlayerFirstName + " " + PlayerLastName}
-        </h1>
+        <h1 className="min-h-[80px] text-4xl font-semibold">{name}</h1>
         <CustomizedTierLabelComponent
           className="text-lg"
           text={transformTier(tier)}
