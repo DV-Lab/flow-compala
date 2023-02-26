@@ -42,14 +42,21 @@ async function getAllNamesWithFilter(name, tier, team) {
   let infoPlays = plays.map((play) => {
     let firstName = play.metadata.PlayerFirstName;
     let lastName = play.metadata.PlayerLastName;
+    let fullname = `${firstName} ${lastName}`;
+    const name =
+      play.metadata.PlayerKnownName !== ""
+        ? play.metadata.PlayerKnownName
+        : fullname;
+
     let matchHomeTeam = play.metadata.MatchHomeTeam;
     let matchAwayTeam = play.metadata.MatchAwayTeam;
+    const match = `${matchHomeTeam} vs ${matchAwayTeam}`;
 
     return {
       playId: play.id,
       playDataID: play.metadata.PlayDataID,
-      name: `${firstName} ${lastName}`,
-      match: `${matchHomeTeam} vs ${matchAwayTeam}`,
+      name,
+      match,
       playType: play.metadata.PlayType,
       matchSeason: play.metadata.MatchSeason,
       tier: playIdMappingTier[play.id],
