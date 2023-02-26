@@ -1,5 +1,4 @@
 import classNames from "classnames";
-import { TIER_TYPE } from "constant/tier";
 
 /**
  * Mapping hotkey into className package for better usage

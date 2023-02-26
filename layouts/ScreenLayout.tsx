@@ -1,7 +1,6 @@
 import DarkModeButton from "@components/DarkModeButton";
 import StorageDropdown from "@components/Storage/StorageDropdown";
 import { StorageIcon as StorageIconStatic } from "@components/Storage/StorageIcon";
-import { HomeSVG } from "@components/SVGIcons/HomeSVG";
 import { usePreferredPlaysStorageStore } from "@states/app";
 import dynamic from "next/dynamic";
 import Image from "next/image";
