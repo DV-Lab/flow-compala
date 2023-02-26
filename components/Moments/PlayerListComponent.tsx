@@ -83,6 +83,7 @@ export const PlayerListComponent: IComponent = () => {
           nonce={undefined}
           onResize={undefined}
           onResizeCapture={undefined}
+          placeholder="Find your favorite players..."
           color="gray"
           className="text-white p-0"
           value={searchQuery}
