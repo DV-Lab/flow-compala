@@ -19,12 +19,18 @@ export const ScreenLayout: IComponent = ({ children }) => {
   const { hidden } = usePreferredPlaysStorageStore();
   return (
     <div className="h-full min-h-screen flex flex-col">
-      <div className="pt-8 pl-6 z-30 w-fit" onClick={() => router.push("/")}>
+      <div className="pt-1 pl-6 z-30 w-fit" onClick={() => router.push("/")}>
         <Image
           src="/compala_logo.png"
           alt="deVin Logo"
-          width={200}
-          height={200}
+          width={100}
+          height={100}
+        />
+        <Image
+          src="/compala_logo2.png"
+          alt="deVin Logo"
+          width={350}
+          height={100}
         />
       </div>
       <div className="flex items-center absolute top-0 right-0">
