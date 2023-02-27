@@ -1,10 +1,10 @@
-# DEVIN NextJS Template
+# [CompaLa](flow-compala.vercel.app/) 
 
-> Helping when start new frontend project
+## Tagline 
+> Discover the differences: Compare LaLiga Golazos Moments with CompaLa
 
-This is NextJS with React 18 template, which support auto format with eslint and intergrate `husky` for code checking before commit. This will help in smooth out project building.
-
-## Project detail
+## The problem it solves
+If you've ever purchased an NFT Moment on LaLiga Golazos Marketplace, you've probably experienced the confusion that comes with trying to choose the right one. Collectors often have to open multiple tabs to compare information such as highlights and edition data, which can quickly become messy. Despite the chaos, this process is necessary because it's difficult to compare Moments quickly otherwise. But imagine having a tool that allows you to easily place Moments side-by-side and identify the features that are most attractive to you. The ability to compare Moments with ease would be incredibly beneficial for collectors.
 
 ### Commands
 
@@ -37,20 +37,26 @@ This is NextJS with React 18 template, which support auto format with eslint and
 └── utils               # App's utils
 ```
 
-### Some code rule
-
-- Component that belong only to screen, should be placed on that screen's folder
-- App's state should using Recoil, state relate to API should using Redux
-- Function that can be used many time should place in utils or hooks if relate to state
-- HOC placed in `layouts` have prefix `*HOC` like `AuthenticationHOC`
-- Layout placed in `layouts` and have prefix `*Layout` like `MainLayout` or `DefaultLayout`
-- All atom from recoil should have prefix `*Atom` like `DarkmodeAtom`
-- All config export from configs folder should have export prefix `*Config` like `BaseConfig` or `ApiConfig`
-
 ## Tech included
 
 - `NextJS + Typescript` Base source
-- [Zustand](https://github.com/pmndrs/zustand) State management
+- [Zustand](https://github.com/pmndrs/zustand): State management
+- `Cadence`: Write scripts to query on-chain data
+- `Flow client library`: Interact with Flow blockchain
 - `Husky` Git helper
 - `SCSS modules` Style system
 - `Eslint and Prettier` Rule of code
+
+
+# Demo 
+1. Link youtube: `https://youtu.be/4IbP9GE4phs`
+
+![Cover photo](/docs/cover.png)
+
+![Compare](/docs/1.png)
+
+![Chart](/docs/2.png)
+
+![Empty](/docs/3.png)
+
+![Storage](/docs/4.png)
