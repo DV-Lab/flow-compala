@@ -1,5 +1,5 @@
-import Logo from "@public/devin.png";
-import LogoDarkMode from "@public/devin2.png";
+import Logo from "@public/dvlab.png";
+import LogoDarkMode from "@public/dvlab-dark.png";
 import { useAppStore } from "@states/app";
 import { cx } from "@utils/tools";
 import Head from "next/head";
